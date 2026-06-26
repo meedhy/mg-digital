@@ -106,7 +106,7 @@ export function Eyebrow({
 }: TypographyProps) {
   return (
     <span
-      className={`font-body text-xs font-semibold uppercase tracking-[0.18em] ${colorClasses[color]} ${className}`}
+      className={`font-body text-xs font-semibold uppercase ${colorClasses[color]} ${className}`}
     >
       {children}
     </span>

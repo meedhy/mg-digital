@@ -9,19 +9,15 @@ function LinkedInIcon() {
 export default function Footer() {
   return (
     <footer
-      className="flex flex-col md:flex-row items-center justify-between gap-4 px-6 md:px-12 py-6"
+      className="flex flex-col items-center justify-between gap-4 border-t border-white/10 px-5 sm:px-8 lg:px-12 py-7 md:flex-row"
       style={{ backgroundColor: "#080D5E" }}
     >
-      <div className="flex items-baseline gap-1">
-        <span className="font-display italic text-white/60 text-base">
-          mehdi
-        </span>
-        <span className="font-handwriting text-sky-blue text-lg">ghali</span>
-        <span className="font-body text-white/30 text-sm"> · MG Digital</span>
+      <div className="font-body text-sm text-white/40">
+        Medhi Ghali <span className="text-white/20">· MG Digital</span>
       </div>
 
       <p className="font-body text-xs text-white/30">
-        © 2025 · Tous droits réservés
+        © 2026 · Tous droits réservés
       </p>
 
       <a

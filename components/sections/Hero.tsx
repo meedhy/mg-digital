@@ -1,168 +1,139 @@
-"use client";
+const proofPoints = [
+  { value: "6+", label: "ans PM senior" },
+  { value: "3-5", label: "clients an 1" },
+  { value: "500$+", label: "projet calibré" },
+];
 
-import { useRef } from "react";
-import Button from "@/components/ui/Button";
-import { useParallax } from "@/hooks/useParallax";
-
-function AnimatedWords({
-  text,
-  className = "",
-  startDelay = 0,
-}: {
-  text: string;
-  className?: string;
-  startDelay?: number;
-}) {
-  const words = text.split(" ");
-  return (
-    <span className={`inline-block ${className}`}>
-      {words.map((word, i) => (
-        <span
-          key={i}
-          className="inline-block overflow-visible mr-[0.25em] [animation:wordReveal_400ms_ease_forwards] opacity-0"
-          style={{
-            animationDelay: `${startDelay + i * 60}ms`,
-          }}
-        >
-          {word}
-        </span>
-      ))}
-    </span>
-  );
-}
+const workflow = [
+  "Vision",
+  "Offre",
+  "Produit",
+  "Mesure",
+];
 
 export default function Hero() {
-  const circleRef = useRef<HTMLDivElement>(null);
-  useParallax(circleRef, 0.2);
-
   return (
-    <section
-      className="relative min-h-screen overflow-hidden bg-blue-night px-6 md:px-12 flex items-center"
-      style={{
-        paddingTop: "96px",
-        paddingBottom: "96px",
-      }}
-    >
-      <style>{`
-        @keyframes wordReveal {
-          0% { opacity: 0; clip-path: inset(0 100% 0 0); }
-          100% { opacity: 1; clip-path: inset(0 0% 0 0); }
-        }
-        @keyframes fadeIn {
-          0% { opacity: 0; transform: translateY(12px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
+    <section className="relative min-h-[100svh] overflow-hidden bg-blue-night px-5 pt-24 text-white sm:px-8 md:pt-28 lg:px-12">
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.045)_1px,transparent_1px)] bg-[size:72px_72px]" />
+      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#071052] to-transparent" />
 
-      <div
-        ref={circleRef}
-        className="pointer-events-none absolute -top-[200px] -right-[200px] h-[700px] w-[700px] rounded-full"
-        style={{ backgroundColor: "#4DA6FF", opacity: 0.06 }}
-      />
+      <div className="relative mx-auto grid min-h-[calc(100svh-6rem)] max-w-7xl grid-cols-1 items-center gap-10 pb-12 lg:grid-cols-[1.02fr_0.98fr]">
+        <div className="max-w-3xl">
+          <div className="mb-6 inline-flex items-center gap-3 border border-white/12 bg-white/[0.04] px-3 py-2 backdrop-blur-md">
+            <span className="h-2 w-2 rounded-full bg-sky-blue" />
+            <p className="font-body text-[12px] font-medium uppercase text-white/62">
+              Product Builder · Paris / Kinshasa
+            </p>
+          </div>
 
-      <div className="relative z-10 mx-auto w-full max-w-7xl grid grid-cols-1 md:grid-cols-[65%_35%] gap-12 items-center">
-        <div>
-          <span
-            className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-6 font-body text-sm text-sky-blue opacity-0 [animation:fadeIn_500ms_ease_forwards]"
-            style={{
-              backgroundColor: "rgba(77,166,255,0.1)",
-              border: "1px solid rgba(77,166,255,0.22)",
-              animationDelay: "0ms",
-            }}
-          >
-            <span className="h-1.5 w-1.5 rounded-full bg-sky-blue [animation:pulse-dot_2s_ease-in-out_infinite]" />
-            Product Manager · Paris ↔ Kinshasa
-          </span>
-
-          <h1 className="leading-[1.05]">
-            <span className="block font-display font-extrabold text-white text-display-lg">
-              <AnimatedWords text="Vous avez la vision." />
-            </span>
-            <span
-              className="block font-handwriting text-sky-blue overflow-visible"
-              style={{ fontSize: "1.3em" }}
-            >
-              <AnimatedWords text="Je construis" startDelay={240} />
-            </span>
-            <span className="block font-display font-extrabold text-white text-display-lg">
-              <AnimatedWords text="le produit digital" startDelay={420} />
-            </span>
-            <span className="block font-display font-extrabold italic text-white text-display-lg">
-              <AnimatedWords text="qui la concrétise." startDelay={660} />
+          <h1 className="font-display text-[clamp(3.1rem,7vw,6.7rem)] font-extrabold leading-[0.92] text-white">
+            Vous avez la vision.
+            <span className="mt-2 block font-handwriting text-[clamp(4rem,8.5vw,7.4rem)] leading-[0.72] text-sky-blue">
+              Je construis.
             </span>
           </h1>
 
-          <p
-            className="mt-6 max-w-[520px] font-body text-base leading-[1.65] opacity-0 [animation:fadeIn_500ms_ease_forwards]"
-            style={{ color: "rgba(248,248,246,0.6)", animationDelay: "800ms" }}
-          >
-            Product Manager senior, je conçois des produits digitaux pour les
-            entrepreneurs et PME congolaises.
+          <p className="mt-7 max-w-2xl font-body text-[clamp(1rem,1.45vw,1.22rem)] font-light leading-[1.7] text-white/64">
+            Un site pensé comme un produit, pas commandé comme une prestation.
+            J&apos;accompagne les PME congolaises de l&apos;ambition business au
+            produit digital mesurable.
           </p>
 
-          <div
-            className="mt-8 flex flex-col items-start gap-4 opacity-0 [animation:fadeIn_500ms_ease_forwards]"
-            style={{ animationDelay: "1000ms" }}
-          >
-            <Button
-              variant="whatsapp"
-              size="lg"
-              href="https://wa.me/33786034629"
-            >
-              Démarrons sur WhatsApp
-            </Button>
-
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
-              href="#realisations"
-              className="font-body text-sm text-white/70 hover:text-white transition-colors duration-200"
+              href="https://wa.me/33786034629"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-12 items-center justify-center rounded-md bg-white px-6 font-body text-sm font-semibold text-blue-night transition duration-200 hover:-translate-y-0.5 hover:bg-sky-blue hover:text-white"
             >
-              Voir mes réalisations{" "}
-              <span className="inline-block [animation:bounce-y_4s_ease-in-out_infinite]">
-                ↓
-              </span>
+              Discutons sur WhatsApp
+            </a>
+            <a
+              href="#offres"
+              className="inline-flex min-h-12 items-center justify-center rounded-md border border-white/16 px-6 font-body text-sm font-semibold text-white/82 transition duration-200 hover:border-sky-blue hover:text-white"
+            >
+              Voir les offres
             </a>
           </div>
-        </div>
 
-        <div className="relative mx-auto md:mx-0">
-          <div
-            className="relative h-72 w-72 md:h-80 md:w-80 rounded-full flex items-center justify-center"
-            style={{
-              backgroundColor: "rgba(77,166,255,0.1)",
-              border: "1px solid rgba(77,166,255,0.2)",
-            }}
-          >
-            {/* TODO: remplacer par next/image */}
-            {/* src="/medhi.jpg" */}
-            <span className="font-display font-extrabold text-sky-blue text-[64px]">
-              MG
-            </span>
-          </div>
-
-          <div
-            className="absolute -bottom-4 -left-4 rounded-md px-4 py-2 font-body text-sm text-white [animation:float_3s_ease-in-out_infinite]"
-            style={{
-              backgroundColor: "#0A1172",
-              border: "1px solid #4DA6FF",
-            }}
-          >
-            6+ ans · Product Manager
-          </div>
-
-          <div
-            className="absolute -top-4 -right-2 rounded-md px-3 py-1.5 font-body text-sm text-sky-blue"
-            style={{ backgroundColor: "rgba(77,166,255,0.15)" }}
-          >
-            Paris ↔ Kinshasa
+          <div className="mt-10 grid max-w-xl grid-cols-3 border-y border-white/10">
+            {proofPoints.map((point) => (
+              <div key={point.label} className="py-5 pr-4">
+                <p className="font-display text-3xl font-extrabold text-white">
+                  {point.value}
+                </p>
+                <p className="mt-1 font-body text-xs leading-snug text-white/40">
+                  {point.label}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
-      </div>
 
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-        <div
-          className="h-10 w-px [animation:scroll-pulse_2s_ease-in-out_infinite]"
-          style={{ backgroundColor: "#4DA6FF" }}
-        />
+        <div className="relative mx-auto w-full max-w-[560px] lg:mx-0">
+          <div className="absolute -inset-4 border border-sky-blue/20" />
+          <div className="relative overflow-hidden rounded-lg border border-white/12 bg-[#0f1880]/80 shadow-blue-xl backdrop-blur-xl">
+            <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+              <div>
+                <p className="font-body text-xs uppercase text-white/38">
+                  Roadmap produit
+                </p>
+                <p className="mt-1 font-display text-2xl font-bold text-white">
+                  Business vers digital
+                </p>
+              </div>
+              <span className="rounded-full bg-sky-blue px-3 py-1 font-body text-xs font-semibold text-white">
+                Live
+              </span>
+            </div>
+
+            <div className="grid gap-4 p-5">
+              {workflow.map((item, index) => (
+                <div
+                  key={item}
+                  className="grid grid-cols-[44px_1fr_auto] items-center gap-4 rounded-md border border-white/10 bg-white/[0.045] p-4"
+                >
+                  <span className="flex h-11 w-11 items-center justify-center rounded-md bg-white text-sm font-semibold text-blue-night">
+                    0{index + 1}
+                  </span>
+                  <div>
+                    <p className="font-body text-sm font-semibold text-white">
+                      {item}
+                    </p>
+                    <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
+                      <div
+                        className="h-full rounded-full bg-sky-blue"
+                        style={{ width: `${58 + index * 12}%` }}
+                      />
+                    </div>
+                  </div>
+                  <span className="font-body text-xs text-white/38">
+                    {index === 3 ? "KPI" : "Build"}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-2 border-t border-white/10">
+              <div className="p-5">
+                <p className="font-body text-xs uppercase text-white/38">
+                  Stack
+                </p>
+                <p className="mt-1 font-body text-sm font-semibold text-white">
+                  Next.js · Tailwind · Supabase
+                </p>
+              </div>
+              <div className="border-l border-white/10 p-5">
+                <p className="font-body text-xs uppercase text-white/38">
+                  Livrable
+                </p>
+                <p className="mt-1 font-body text-sm font-semibold text-white">
+                  Code propre, propriétaire
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

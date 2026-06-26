@@ -6,9 +6,9 @@ import { Body, Eyebrow, Handwriting, Heading } from "@/components/ui/Typography"
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const stats = [
-  { value: "6+", label: "ans d'expérience" },
-  { value: "2", label: "continents" },
-  { value: "100%", label: "orienté résultat" },
+  { value: "6+", label: "ans d'expérience produit" },
+  { value: "2", label: "marchés connectés" },
+  { value: "0", label: "abonnement imposé" },
 ];
 
 const tags = [
@@ -20,38 +20,56 @@ const tags = [
   "Formation PM",
 ];
 
+const comparisons = [
+  ["Prestataire classique", "Livre un design ou du code"],
+  ["Product Builder", "Livre un produit qui sert un objectif business"],
+  ["Approche MG", "Clarifie le besoin avant de builder"],
+];
+
 export default function About() {
   const sectionRef = useRef<HTMLDivElement>(null);
   useScrollAnimation(sectionRef);
 
   return (
-    <section id="apropos" className="bg-off-white py-24 px-6 md:px-12">
+    <section id="apropos" className="bg-white px-5 sm:px-8 lg:px-12 py-24 md:py-32">
       <div
         ref={sectionRef}
-        className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
+        className="mx-auto grid max-w-7xl grid-cols-1 gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center"
       >
-        <div className="order-2 md:order-1">
-          <div
-            className="relative h-72 w-72 md:h-80 md:w-80 mx-auto md:mx-0 rounded-full flex items-center justify-center"
-            style={{
-              backgroundColor: "rgba(77,166,255,0.1)",
-              border: "1px solid rgba(77,166,255,0.2)",
-            }}
-          >
-            {/* TODO: remplacer par next/image */}
-            {/* src="/medhi.jpg" */}
-            <span className="font-display font-extrabold text-sky-blue text-[64px]">
-              MG
-            </span>
+        <div className="order-2 lg:order-1">
+          <div className="overflow-hidden rounded-lg border border-black/10 bg-off-white shadow-blue-sm">
+            <div className="border-b border-black/10 p-6">
+              <p className="font-body text-[12px] font-semibold uppercase text-blue-night/45">
+                Différence
+              </p>
+              <h3 className="mt-3 font-display text-3xl font-extrabold text-blue-night">
+                Un partenaire produit, pas un exécutant.
+              </h3>
+            </div>
+            <div className="divide-y divide-black/10">
+              {comparisons.map(([label, value]) => (
+                <div key={label} className="grid gap-2 p-6 sm:grid-cols-[0.42fr_0.58fr]">
+                  <p className="font-body text-sm font-semibold text-soft-black">
+                    {label}
+                  </p>
+                  <p className="font-body text-sm leading-[1.65] text-gray">
+                    {value}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className="mt-8 flex items-center justify-center md:justify-start divide-x divide-black/10">
-            {stats.map((stat) => (
-              <div key={stat.label} className="px-6 text-center first:pl-0">
-                <span className="block font-display font-extrabold text-blue-night text-[36px]">
+          <div className="mt-6 grid grid-cols-3 overflow-hidden rounded-lg border border-black/10 bg-blue-night text-white">
+            {stats.map((stat, i) => (
+              <div
+                key={stat.label}
+                className={`p-5 ${i > 0 ? "border-l border-white/10" : ""}`}
+              >
+                <span className="block font-display text-[clamp(1.9rem,4vw,2.8rem)] font-extrabold leading-none text-sky-blue">
                   {stat.value}
                 </span>
-                <span className="font-body text-sm text-gray">
+                <span className="mt-2 block font-body text-xs leading-snug text-white/52">
                   {stat.label}
                 </span>
               </div>
@@ -59,9 +77,9 @@ export default function About() {
           </div>
         </div>
 
-        <div className="order-1 md:order-2">
+        <div className="order-1 lg:order-2">
           <Eyebrow>À propos</Eyebrow>
-          <Heading className="mt-3">
+          <Heading className="mt-4">
             Un PM senior au service
             <br />
             de votre <Handwriting>ambition</Handwriting>
@@ -80,7 +98,7 @@ export default function About() {
             des produits digitaux à la hauteur de ses ambitions.
           </Body>
 
-          <div className="mt-6 flex flex-wrap gap-2">
+          <div className="mt-8 flex flex-wrap gap-2">
             {tags.map((tag) => (
               <Badge key={tag}>{tag}</Badge>
             ))}
