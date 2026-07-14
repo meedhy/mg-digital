@@ -233,8 +233,9 @@ function ProcessVisual({ active, compact = false }: { active: number; compact?: 
 export default function ProcessExperience() {
   const sectionRef = useRef<HTMLElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
-  const mobileTabsRef = useRef<HTMLDivElement>(null);
-  const mobileTabRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const mobileTimelineRef = useRef<HTMLDivElement>(null);
+  const mobileProgressRef = useRef<HTMLDivElement>(null);
+  const mobileStepRefs = useRef<Array<HTMLLIElement | null>>([]);
   const activeRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -246,6 +247,16 @@ export default function ProcessExperience() {
       step: steps[index].number,
       title: steps[index].title,
     });
+
+    if (window.matchMedia("(max-width: 767px)").matches) {
+      activeRef.current = index;
+      setActiveIndex(index);
+      mobileStepRefs.current[index]?.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        block: "center",
+      });
+      return;
+    }
 
     if (window.matchMedia("(max-width: 1023px)").matches) {
       activeRef.current = index;
@@ -293,13 +304,52 @@ export default function ProcessExperience() {
   }, []);
 
   useEffect(() => {
-    if (!window.matchMedia("(max-width: 767px)").matches) return;
-    mobileTabRefs.current[activeIndex]?.scrollIntoView({
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-      block: "nearest",
-      inline: "center",
-    });
-  }, [activeIndex]);
+    const mobileQuery = window.matchMedia("(max-width: 767px)");
+    if (!mobileQuery.matches) return;
+
+    let animationFrame = 0;
+    const updateMobileTimeline = () => {
+      animationFrame = 0;
+      const timeline = mobileTimelineRef.current;
+      if (!timeline) return;
+
+      const viewportMarker = window.innerHeight * 0.52;
+      const timelineRect = timeline.getBoundingClientRect();
+      const progress = Math.min(1, Math.max(0, (viewportMarker - timelineRect.top) / timelineRect.height));
+      if (mobileProgressRef.current) mobileProgressRef.current.style.transform = `scaleY(${progress})`;
+
+      let nextIndex = 0;
+      let closestDistance = Number.POSITIVE_INFINITY;
+      mobileStepRefs.current.forEach((step, index) => {
+        if (!step) return;
+        const rect = step.getBoundingClientRect();
+        const distance = Math.abs(rect.top + rect.height / 2 - viewportMarker);
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          nextIndex = index;
+        }
+      });
+
+      if (nextIndex !== activeRef.current) {
+        activeRef.current = nextIndex;
+        setActiveIndex(nextIndex);
+      }
+    };
+
+    const scheduleUpdate = () => {
+      if (animationFrame) return;
+      animationFrame = window.requestAnimationFrame(updateMobileTimeline);
+    };
+
+    scheduleUpdate();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+    return () => {
+      if (animationFrame) window.cancelAnimationFrame(animationFrame);
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+    };
+  }, []);
 
   const activeStep = steps[activeIndex];
 
@@ -384,58 +434,83 @@ export default function ProcessExperience() {
 
       <div className="process-static page-shell gap-7 md:gap-10">
         <div className="min-w-0 md:hidden">
-          <header className="pb-5">
+          <header className="pb-2">
             <p className="text-[10px] font-bold uppercase text-white/38">Notre méthode</p>
             <h2 className="mt-3 text-[1.75rem] font-semibold leading-[1.02] text-white">
               Comment votre site <span className="font-editorial font-normal italic text-white/58">prend forme.</span>
             </h2>
           </header>
 
-          <nav aria-label="Étapes de la méthode" className="border-y border-white/10">
-            <div ref={mobileTabsRef} className="flex snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {steps.map((step, index) => {
-                const Icon = step.icon;
-                const isActive = index === activeIndex;
-                return (
-                  <button
-                    key={step.number}
-                    ref={(node) => { mobileTabRefs.current[index] = node; }}
-                    type="button"
-                    onClick={() => navigateToStep(index)}
-                    aria-current={isActive ? "step" : undefined}
-                    aria-controls="mobile-process-step"
-                    className={`relative flex min-h-[72px] w-[43%] shrink-0 snap-center items-center gap-2.5 border-r border-white/8 px-3 text-left transition-colors ${
-                      isActive ? "bg-white/[0.09] text-white" : "text-white/40"
-                    }`}
-                  >
-                    <Icon size={16} strokeWidth={1.7} className={isActive ? "text-[#a9a1ff]" : "text-white/24"} />
-                    <span className="min-w-0">
-                      <span className={`block text-[8px] font-bold ${isActive ? "text-[#a9a1ff]" : "text-white/22"}`}>{step.number}</span>
-                      <span className="mt-0.5 block text-[11px] font-semibold">{step.title}</span>
-                    </span>
-                    <span
-                      aria-hidden="true"
-                      className={`absolute inset-x-0 bottom-0 h-0.5 bg-[#9f96ff] transition-opacity ${isActive ? "opacity-100" : "opacity-0"}`}
-                    />
-                  </button>
-                );
-              })}
+          <div ref={mobileTimelineRef} className="relative mt-5 grid grid-cols-[38px_minmax(0,1fr)] gap-3">
+            <div className="relative">
+              <span aria-hidden="true" className="absolute bottom-[19svh] left-[18px] top-[19svh] w-px bg-white/10" />
+              <span
+                ref={mobileProgressRef}
+                aria-hidden="true"
+                className="absolute bottom-[19svh] left-[18px] top-[19svh] w-px origin-top scale-y-0 bg-gradient-to-b from-accent via-[#8b8cff] to-accent-secondary will-change-transform"
+              />
+              <ol aria-label="Frise des étapes de la méthode">
+                {steps.map((step, index) => {
+                  const Icon = step.icon;
+                  const isActive = index === activeIndex;
+                  return (
+                    <li
+                      key={step.number}
+                      ref={(node) => { mobileStepRefs.current[index] = node; }}
+                      className="flex h-[38svh] min-h-[250px] items-center justify-center"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => navigateToStep(index)}
+                        aria-current={isActive ? "step" : undefined}
+                        aria-controls="mobile-process-step"
+                        aria-label={`${step.number} ${step.title}`}
+                        className={`relative z-10 flex size-9 items-center justify-center rounded-full border transition-all duration-500 ${
+                          isActive
+                            ? "scale-110 border-accent/55 bg-[#292548] text-[#b8b2ff] shadow-[0_0_30px_rgba(124,108,255,0.28)]"
+                            : index < activeIndex
+                              ? "border-success/35 bg-[#10261e] text-success"
+                              : "border-white/12 bg-[#111117] text-white/28"
+                        }`}
+                      >
+                        {index < activeIndex ? <Check size={15} strokeWidth={2.2} /> : <Icon size={15} strokeWidth={1.7} />}
+                      </button>
+                    </li>
+                  );
+                })}
+              </ol>
             </div>
-          </nav>
 
-          <article id="mobile-process-step" className="panel-in mt-4 rounded-lg border border-white/10 bg-[#101016]/94 p-4" aria-live="polite" key={activeIndex}>
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-[9px] font-bold uppercase text-white/32">Étape {activeIndex + 1} sur {steps.length}</p>
-                <h3 className="mt-1 text-xl font-semibold text-white">{activeStep.title}</h3>
+            <div className="sticky top-24 self-start pt-[max(1rem,8svh)]">
+              <article
+                id="mobile-process-step"
+                className={`overflow-hidden border-y py-4 transition-colors duration-500 ${
+                  activeIndex === steps.length - 1 ? "border-success/20" : "border-white/10"
+                }`}
+                aria-live="polite"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-[10px] font-bold text-[#a9a1ff]">{activeStep.number}</span>
+                  <h3 className="text-xl font-semibold text-white">{activeStep.title}</h3>
+                </div>
+                <p className="mt-2 min-h-10 text-xs leading-5 text-white/54">{activeStep.text}</p>
+                <div className="mt-3 overflow-hidden rounded-md border border-white/8 bg-[#09090e]">
+                  <ProcessVisual active={activeIndex} compact />
+                </div>
+              </article>
+
+              <div className="mt-4 flex items-center gap-3" aria-hidden="true">
+                <span className="text-[9px] font-semibold text-white/30">{activeIndex + 1}</span>
+                <div className="h-px flex-1 bg-white/10">
+                  <div
+                    className="h-px origin-left bg-[#9f96ff] transition-transform duration-500"
+                    style={{ transform: `scaleX(${(activeIndex + 1) / steps.length})` }}
+                  />
+                </div>
+                <span className="text-[9px] font-semibold text-white/30">{steps.length}</span>
               </div>
-              <span className="font-editorial text-3xl italic text-white/24">{activeStep.number}</span>
             </div>
-            <p className="mt-2 text-xs leading-5 text-white/54">{activeStep.text}</p>
-            <div className="mt-3 overflow-hidden rounded-md border border-white/8 bg-[#09090e]">
-              <ProcessVisual active={activeIndex} compact />
-            </div>
-          </article>
+          </div>
         </div>
 
         <div className="hidden max-w-3xl md:block">

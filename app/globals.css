@@ -366,7 +366,15 @@ select:focus-visible {
 
 @media (max-width: 839px) {
   html {
-    scroll-padding-top: 116px;
+    scroll-padding-top: 80px;
+  }
+
+  section[id] {
+    scroll-margin-top: 80px;
+  }
+
+  body {
+    padding-bottom: 76px;
   }
 
   .glass-nav.mobile-nav-surface {

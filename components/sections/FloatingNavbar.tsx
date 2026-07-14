@@ -1,6 +1,7 @@
 "use client";
 
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, useEffect, useRef, useState } from "react";
+import { ClipboardList } from "lucide-react";
 import BrandMark from "@/components/ui/BrandMark";
 import TrackedLink from "@/components/ui/TrackedLink";
 import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
@@ -19,7 +20,10 @@ const chatButtonClassName =
 
 export default function FloatingNavbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [activeHref, setActiveHref] = useState(links[0].href);
+  const [activeHref, setActiveHref] = useState("");
+  const mobileLinksRef = useRef<HTMLDivElement>(null);
+  const mobileLinkRefs = useRef<Array<HTMLAnchorElement | null>>([]);
+  const hideMobileContactBar = activeHref === "#offres" || activeHref === "#contact";
 
   useEffect(() => {
     let animationFrame = 0;
@@ -29,7 +33,7 @@ export default function FloatingNavbar() {
       setScrolled(window.scrollY > 56);
 
       const marker = window.scrollY + Math.min(window.innerHeight * 0.36, 300);
-      let nextHref = links[0].href;
+      let nextHref = "";
 
       links.forEach((link) => {
         const section = document.querySelector<HTMLElement>(link.href);
@@ -57,12 +61,25 @@ export default function FloatingNavbar() {
     };
   }, []);
 
+  useEffect(() => {
+    const activeIndex = links.findIndex((link) => link.href === activeHref);
+    const container = mobileLinksRef.current;
+    const activeLink = activeIndex >= 0 ? mobileLinkRefs.current[activeIndex] : null;
+    if (!container || !activeLink) return;
+
+    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+    container.scrollTo({
+      left: activeLink.offsetLeft - (container.clientWidth - activeLink.offsetWidth) / 2,
+      behavior,
+    });
+  }, [activeHref]);
+
   function handleNavigation(event: MouseEvent<HTMLAnchorElement>, href: string) {
     const section = document.querySelector<HTMLElement>(href);
     if (!section) return;
 
     event.preventDefault();
-    setActiveHref(href === "#accueil" ? links[0].href : href);
+    setActiveHref(href === "#accueil" ? "" : href);
     window.history.replaceState(null, "", href);
 
     const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
@@ -70,28 +87,61 @@ export default function FloatingNavbar() {
   }
 
   return (
-    <header className="pointer-events-none fixed left-1/2 top-2 z-50 w-[min(96vw,1180px)] -translate-x-1/2 min-[840px]:top-5 min-[840px]:w-[min(94vw,1180px)]">
-      <nav
-        aria-label="Navigation principale"
-        className={`glass-nav mobile-nav-surface pointer-events-auto flex items-center justify-between rounded-t-[20px] rounded-b-none border-b-0 transition-all duration-300 ease-premium min-[840px]:rounded-full min-[840px]:border ${
-          scrolled
-            ? "min-h-14 px-3 min-[840px]:min-h-14 min-[840px]:scale-[0.985] min-[840px]:px-5"
-            : "min-h-14 px-3 min-[840px]:px-6"
-        }`}
-      >
+    <>
+      <header className="pointer-events-none fixed left-1/2 top-2 z-50 w-[min(calc(100vw-16px),1180px)] -translate-x-1/2 min-[840px]:top-5 min-[840px]:w-[min(94vw,1180px)]">
+        <nav
+          aria-label="Navigation principale"
+          className={`glass-nav mobile-nav-surface pointer-events-auto flex items-center gap-2 overflow-hidden rounded-full transition-all duration-300 ease-premium min-[840px]:justify-between min-[840px]:gap-0 ${
+            scrolled
+              ? "min-h-14 px-3 min-[840px]:min-h-14 min-[840px]:scale-[0.985] min-[840px]:px-5"
+              : "min-h-14 px-3 min-[840px]:px-6"
+          }`}
+        >
         <a
           href="#accueil"
           aria-label="Revenir à l’accueil"
           className="shrink-0 rounded-full"
           onClick={(event) => handleNavigation(event, "#accueil")}
         >
-          <span className="hidden sm:inline-flex">
+          <span className="hidden min-[840px]:inline-flex">
             <BrandMark />
           </span>
-          <span className="inline-flex sm:hidden">
+          <span className="inline-flex min-[840px]:hidden">
             <BrandMark compact />
           </span>
         </a>
+
+        <div
+          ref={mobileLinksRef}
+          className="flex min-w-0 flex-1 items-center gap-0.5 overflow-x-auto overscroll-x-contain [scrollbar-width:none] min-[840px]:hidden [&::-webkit-scrollbar]:hidden"
+        >
+          {links.map((link, index) => {
+            const isActive = activeHref === link.href;
+
+            return (
+              <a
+                key={link.href}
+                ref={(element) => {
+                  mobileLinkRefs.current[index] = element;
+                }}
+                href={link.href}
+                onClick={(event) => handleNavigation(event, link.href)}
+                aria-current={isActive ? "location" : undefined}
+                className={`relative flex min-h-9 shrink-0 items-center rounded-full px-3 text-[11px] font-semibold transition-colors duration-200 ${
+                  isActive ? "bg-white/[0.1] text-white" : "text-white/42 hover:bg-white/[0.05] hover:text-white/76"
+                }`}
+              >
+                {link.label}
+                <span
+                  aria-hidden="true"
+                  className={`absolute bottom-1 left-1/2 size-1 -translate-x-1/2 rounded-full bg-[#9f96ff] transition-opacity ${
+                    isActive ? "opacity-100" : "opacity-0"
+                  }`}
+                />
+              </a>
+            );
+          })}
+        </div>
 
         <div className="hidden items-center gap-3 min-[840px]:flex lg:gap-5 xl:gap-7">
           {links.map((link) => (
@@ -131,22 +181,40 @@ export default function FloatingNavbar() {
           </TrackedLink>
         </div>
 
-        <div className="ml-auto min-[840px]:hidden">
-          <TrackedLink
-            href={whatsappHref()}
-            target="_blank"
-            rel="noopener noreferrer"
-            eventName="navbar_cta_click"
-            secondaryEvent="whatsapp_click"
-            eventPayload={{ source: "mobile_navbar" }}
-            aria-label="Ouvrir le chat WhatsApp"
-            className={`${chatButtonClassName} min-h-10 px-3.5`}
-          >
-            <WhatsAppIcon size={16} className="text-[#19a957]" />
-            Chat
-          </TrackedLink>
-        </div>
+        </nav>
+      </header>
+
+      <nav
+        aria-label="Actions de contact"
+        aria-hidden={hideMobileContactBar}
+        className={`glass-nav fixed bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-1/2 z-50 flex w-[calc(100vw-24px)] -translate-x-1/2 items-center gap-1.5 rounded-full p-1.5 transition-[transform,opacity] duration-300 ease-premium min-[840px]:hidden ${
+          hideMobileContactBar
+            ? "pointer-events-none translate-y-[calc(100%+2rem)] opacity-0"
+            : "translate-y-0 opacity-100"
+        }`}
+      >
+        <a
+          href="#contact"
+          onClick={(event) => handleNavigation(event, "#contact")}
+          className="inline-flex min-h-12 min-w-0 flex-1 items-center justify-center gap-2 rounded-full bg-white px-3 text-xs font-semibold text-[#09090d] transition-colors hover:bg-[#f4f4f6]"
+        >
+          <ClipboardList size={16} strokeWidth={1.8} />
+          Votre projet
+        </a>
+        <TrackedLink
+          href={whatsappHref()}
+          target="_blank"
+          rel="noopener noreferrer"
+          eventName="navbar_cta_click"
+          secondaryEvent="whatsapp_click"
+          eventPayload={{ source: "mobile_contact_bar" }}
+          aria-label="Contacter MG Digital sur WhatsApp"
+          className="inline-flex min-h-12 min-w-0 flex-1 items-center justify-center gap-2 rounded-full border border-white/12 bg-white/[0.055] px-3 text-xs font-semibold text-white transition-colors hover:bg-white/[0.1]"
+        >
+          <WhatsAppIcon size={16} className="text-[#39d47a]" />
+          Contacter
+        </TrackedLink>
       </nav>
-    </header>
+    </>
   );
 }

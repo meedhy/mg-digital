@@ -4,12 +4,14 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   ArrowUpRight,
+  ChevronLeft,
+  ChevronRight,
   MessagesSquare,
   PanelsTopLeft,
   ShieldCheck,
   ShoppingBag,
 } from "lucide-react";
-import { ComponentType, useEffect, useRef, useState } from "react";
+import { ComponentType, PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from "react";
 import { useProjectIntent } from "@/components/providers/ProjectIntentProvider";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { trackEvent } from "@/lib/tracking";
@@ -165,6 +167,7 @@ function ObjectiveWireframe({ index }: { index: number }) {
 
 function MobileObjectivePanel({ objective, index }: { objective: Objective; index: number }) {
   const { openLeadFlow } = useProjectIntent();
+  const Icon = objective.icon;
 
   function selectObjective() {
     trackEvent("objective_select", { objective: objective.objective, position: index + 1 });
@@ -172,10 +175,12 @@ function MobileObjectivePanel({ objective, index }: { objective: Objective; inde
   }
 
   return (
-    <article className="panel-in flex min-h-[300px] flex-col p-4" aria-live="polite">
-      <div>
-        <p className="text-[9px] font-bold uppercase text-white/34">Votre objectif</p>
-        <h3 className="mt-1 text-xl font-semibold leading-tight text-white">{objective.title}</h3>
+    <article className="flex h-full min-h-0 flex-col p-4" aria-live="polite">
+      <div className="flex items-start justify-between gap-4">
+        <h3 className="text-[1.35rem] font-semibold leading-tight text-white">{objective.title}</h3>
+        <span className="flex size-10 shrink-0 items-center justify-center rounded-full border border-white/14 bg-white/[0.075] text-white/76">
+          <Icon size={18} strokeWidth={1.7} />
+        </span>
       </div>
 
       <p className="mt-2 text-xs leading-5 text-white/54">{objective.description}</p>
@@ -194,6 +199,167 @@ function MobileObjectivePanel({ objective, index }: { objective: Objective; inde
         <ArrowUpRight className="button-arrow" size={16} />
       </button>
     </article>
+  );
+}
+
+const mobileCardBackgrounds = [
+  "bg-[linear-gradient(145deg,#233453_0%,#11131b_48%,#0d0d13_100%)]",
+  "bg-[linear-gradient(145deg,#30264a_0%,#15121e_48%,#0d0d13_100%)]",
+  "bg-[linear-gradient(145deg,#194034_0%,#101b18_48%,#0d0d13_100%)]",
+  "bg-[linear-gradient(145deg,#3a2926_0%,#191313_48%,#0d0d13_100%)]",
+];
+
+function MobileObjectiveDeck({
+  activeIndex,
+  onNavigate,
+}: {
+  activeIndex: number;
+  onNavigate: (index: number) => void;
+}) {
+  const dragStartRef = useRef<number | null>(null);
+  const dragXRef = useRef(0);
+  const [dragX, setDragX] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  function animateTo(index: number, direction: -1 | 1) {
+    if (isAnimating || index < 0 || index >= objectives.length || index === activeIndex) {
+      dragXRef.current = 0;
+      setDragX(0);
+      return;
+    }
+
+    setIsAnimating(true);
+    dragXRef.current = direction * Math.max(window.innerWidth, 420);
+    setDragX(dragXRef.current);
+    window.setTimeout(() => {
+      onNavigate(index);
+      dragXRef.current = 0;
+      setDragX(0);
+      setIsAnimating(false);
+    }, 260);
+  }
+
+  function handlePointerDown(event: ReactPointerEvent<HTMLDivElement>) {
+    if (isAnimating || event.pointerType === "mouse" && event.button !== 0) return;
+    dragStartRef.current = event.clientX;
+    setIsDragging(true);
+    event.currentTarget.setPointerCapture(event.pointerId);
+  }
+
+  function handlePointerMove(event: ReactPointerEvent<HTMLDivElement>) {
+    if (dragStartRef.current === null || isAnimating) return;
+    const nextDrag = Math.max(-220, Math.min(220, event.clientX - dragStartRef.current));
+    dragXRef.current = nextDrag;
+    setDragX(nextDrag);
+  }
+
+  function handlePointerEnd(event: ReactPointerEvent<HTMLDivElement>) {
+    if (dragStartRef.current === null) return;
+    dragStartRef.current = null;
+    setIsDragging(false);
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+
+    const releasedX = dragXRef.current;
+    if (releasedX < -64 && activeIndex < objectives.length - 1) {
+      animateTo(activeIndex + 1, -1);
+      return;
+    }
+    if (releasedX > 64 && activeIndex > 0) {
+      animateTo(activeIndex - 1, 1);
+      return;
+    }
+    dragXRef.current = 0;
+    setDragX(0);
+  }
+
+  const revealProgress = Math.min(1, Math.abs(dragX) / 150);
+
+  return (
+    <div className="overflow-hidden pb-1 pt-2">
+      <div
+        role="group"
+        aria-label="Cartes des objectifs"
+        className="relative h-[438px] select-none [touch-action:pan-y]"
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerEnd}
+        onPointerCancel={handlePointerEnd}
+      >
+        {objectives.map((objective, index) => {
+          const offset = index - activeIndex;
+          if (offset < 0 || offset > 2) return null;
+
+          const isActive = offset === 0;
+          const translateY = offset * 9 - (isActive ? 0 : revealProgress * 4);
+          const scale = isActive ? 1 : 1 - offset * 0.035 + revealProgress * 0.018;
+          const transform = isActive
+            ? `translate3d(${dragX}px, 0, 0) rotate(${dragX / 24}deg)`
+            : `translate3d(0, ${translateY}px, 0) scale(${scale})`;
+
+          return (
+            <div
+              key={objective.title}
+              role={isActive ? "group" : undefined}
+              aria-label={isActive ? `${objective.title}, carte ${index + 1} sur ${objectives.length}` : undefined}
+              aria-hidden={!isActive}
+              className={`absolute inset-x-0 top-0 h-[420px] overflow-hidden rounded-lg border border-white/14 shadow-[0_28px_80px_rgba(0,0,0,0.45)] ${mobileCardBackgrounds[index]} ${
+                isDragging && isActive ? "transition-none" : "transition-[transform,opacity] duration-300 ease-premium"
+              }`}
+              style={{
+                zIndex: objectives.length - offset,
+                opacity: isActive ? 1 - Math.min(0.28, Math.abs(dragX) / 700) : 1 - offset * 0.2,
+                pointerEvents: isActive ? "auto" : "none",
+                transform,
+                transformOrigin: dragX >= 0 ? "bottom left" : "bottom right",
+              }}
+            >
+              <MobileObjectivePanel objective={objective} index={index} />
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="mt-1 flex items-center justify-between gap-4">
+        <button
+          type="button"
+          onClick={() => animateTo(activeIndex - 1, 1)}
+          disabled={activeIndex === 0 || isAnimating}
+          aria-label="Voir l’objectif précédent"
+          title="Objectif précédent"
+          className="flex size-10 shrink-0 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] text-white transition-colors hover:bg-white/[0.1] disabled:opacity-25"
+        >
+          <ChevronLeft size={18} />
+        </button>
+
+        <div className="flex flex-1 items-center gap-1.5" aria-label={`Objectif ${activeIndex + 1} sur ${objectives.length}`}>
+          {objectives.map((objective, index) => (
+            <button
+              key={objective.title}
+              type="button"
+              onClick={() => animateTo(index, index > activeIndex ? -1 : 1)}
+              disabled={index === activeIndex || isAnimating}
+              aria-label={`Afficher ${objective.title}`}
+              title={objective.title}
+              className="group h-7 flex-1 disabled:cursor-default"
+            >
+              <span className={`block h-1 rounded-full transition-colors ${index === activeIndex ? "bg-white" : "bg-white/14 group-hover:bg-white/30"}`} />
+            </button>
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={() => animateTo(activeIndex + 1, -1)}
+          disabled={activeIndex === objectives.length - 1 || isAnimating}
+          aria-label="Voir l’objectif suivant"
+          title="Objectif suivant"
+          className="flex size-10 shrink-0 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] text-white transition-colors hover:bg-white/[0.1] disabled:opacity-25"
+        >
+          <ChevronRight size={18} />
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -241,8 +407,6 @@ function ObjectiveCard({ objective, index, compact = false }: { objective: Objec
 export default function BusinessObjectives() {
   const sectionRef = useRef<HTMLElement>(null);
   const cardRefs = useRef<Array<HTMLElement | null>>([]);
-  const mobileTabsRef = useRef<HTMLDivElement>(null);
-  const mobileTabRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const activeRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -267,18 +431,6 @@ export default function BusinessObjectives() {
     const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
     window.scrollTo({ top: sectionTop + scrollRange * progress, behavior });
   }
-
-  useEffect(() => {
-    const tabs = mobileTabsRef.current;
-    const activeTab = mobileTabRefs.current[activeIndex];
-    if (!tabs || !activeTab || window.innerWidth >= 768) return;
-
-    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
-    tabs.scrollTo({
-      left: activeTab.offsetLeft - (tabs.clientWidth - activeTab.offsetWidth) / 2,
-      behavior,
-    });
-  }, [activeIndex]);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -433,51 +585,7 @@ export default function BusinessObjectives() {
             </h2>
           </div>
 
-          <nav aria-label="Activités et objectifs à découvrir" className="border-y border-white/9">
-            <div
-              ref={mobileTabsRef}
-              className="relative flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-            >
-              {objectives.map((objective, index) => {
-                const isActive = index === activeIndex;
-                const Icon = objective.icon;
-                return (
-                  <button
-                    key={objective.title}
-                    ref={(element) => {
-                      mobileTabRefs.current[index] = element;
-                    }}
-                    type="button"
-                    onClick={() => navigateToObjective(index)}
-                    aria-current={isActive ? "step" : undefined}
-                    aria-controls="mobile-objective-panel"
-                    className={`relative flex min-h-[54px] w-[46%] min-w-[150px] shrink-0 snap-center items-center border-r border-white/8 px-3 py-2 text-left transition-colors last:border-r-0 ${
-                      isActive ? "bg-white/[0.085] text-white" : "text-white/42"
-                    }`}
-                  >
-                    <span
-                      className={`mr-2 flex size-7 shrink-0 items-center justify-center rounded-full border transition-colors ${
-                        isActive
-                          ? "border-accent/35 bg-accent/12 text-[#aaa2ff]"
-                          : "border-white/8 bg-white/[0.025] text-white/28"
-                      }`}
-                    >
-                      <Icon size={13} strokeWidth={1.8} />
-                    </span>
-                    <span className="block text-[11px] font-semibold leading-4">{objective.title}</span>
-                    <span
-                      aria-hidden="true"
-                      className={`absolute inset-x-0 bottom-0 h-0.5 bg-[#9f96ff] transition-opacity ${isActive ? "opacity-100" : "opacity-0"}`}
-                    />
-                  </button>
-                );
-              })}
-            </div>
-          </nav>
-
-          <div id="mobile-objective-panel" className="mt-4 overflow-hidden rounded-lg border border-white/10 bg-[#101016]/94" key={activeIndex}>
-            <MobileObjectivePanel objective={objectives[activeIndex]} index={activeIndex} />
-          </div>
+          <MobileObjectiveDeck activeIndex={activeIndex} onNavigate={navigateToObjective} />
         </div>
 
         <div className="hidden gap-8 md:grid">

@@ -5,7 +5,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowDown, ArrowUpRight, Check } from "lucide-react";
 import { useEffect, useRef } from "react";
 import TrackedLink from "@/components/ui/TrackedLink";
-import { whatsappHref } from "@/lib/contact";
 
 const reassurance = ["Premier échange gratuit", "Réponse sous 24 h", "Site livré clé en main"];
 
@@ -74,11 +73,11 @@ export default function HeroExperience() {
           <div className="interface-grid absolute inset-0 opacity-40" />
         </div>
 
-        <div className="page-shell relative z-20 flex h-full flex-col justify-start pb-[45vh] pt-36 md:justify-center md:pb-16 min-[840px]:pt-32">
+        <div className="page-shell relative z-20 flex h-full flex-col justify-start pb-24 pt-24 md:justify-center md:pb-16 min-[840px]:pt-32">
           <div className="relative z-20 max-w-[1100px]">
             <h1
               ref={titleRef}
-              className="max-w-[980px] origin-left text-[2.5rem] font-semibold leading-[0.96] text-white sm:text-[2.8rem] md:text-[3.8rem] lg:text-[5rem] xl:text-[5.7rem]"
+              className="max-w-[980px] origin-left text-[2.2rem] font-semibold leading-[0.96] text-white min-[380px]:text-[2.5rem] sm:text-[2.8rem] md:text-[3.8rem] lg:text-[5rem] xl:text-[5.7rem]"
             >
               Votre site internet <span className="font-editorial text-gradient inline-block font-normal italic">commence ici.</span>
             </h1>
@@ -90,33 +89,28 @@ export default function HeroExperience() {
             </p>
             <div className="mt-5 flex flex-col gap-3 sm:mt-7 sm:flex-row">
               <TrackedLink
-                href={whatsappHref()}
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#contact"
                 eventName="hero_primary_cta_click"
-                secondaryEvent="whatsapp_click"
                 eventPayload={{ source: "hero" }}
                 className="button-primary"
               >
                 Démarrer mon site
                 <ArrowUpRight className="button-arrow" size={17} />
               </TrackedLink>
-              <span className="hidden sm:contents">
-                <TrackedLink
-                  href="#realisations"
-                  eventName="hero_portfolio_click"
-                  eventPayload={{ source: "hero" }}
-                  className="button-secondary"
-                >
-                  Voir les réalisations
-                  <ArrowDown className="button-arrow" size={16} />
-                </TrackedLink>
-              </span>
+              <TrackedLink
+                href="#realisations"
+                eventName="hero_portfolio_click"
+                eventPayload={{ source: "hero" }}
+                className="button-secondary"
+              >
+                Voir les réalisations
+                <ArrowDown className="button-arrow" size={16} />
+              </TrackedLink>
             </div>
-            <div className="mt-5 grid grid-cols-2 gap-x-4 gap-y-2 sm:mt-7 sm:flex sm:flex-wrap sm:gap-x-5">
+            <div className="mt-5 flex flex-col items-start gap-2.5 sm:mt-7 md:flex-row md:flex-wrap md:gap-x-5">
               {reassurance.map((item) => (
-                <span key={item} className="inline-flex items-center gap-2 text-xs font-medium text-white/52">
-                  <Check size={13} className="text-success" />
+                <span key={item} className="inline-flex items-center gap-2 text-xs font-medium text-white/62">
+                  <Check size={13} className="shrink-0 text-success" />
                   <span>{item}</span>
                 </span>
               ))}
@@ -127,7 +121,7 @@ export default function HeroExperience() {
         <div
           ref={interfaceRef}
           aria-hidden="true"
-          className="pointer-events-none absolute bottom-[-3vh] right-[-72vw] z-10 aspect-[16/10] w-[170vw] max-w-[980px] origin-center transform-gpu opacity-80 sm:right-[-28vw] sm:w-[100vw] md:bottom-[-5vh] md:right-[-8vw] md:w-[72vw] md:opacity-100 lg:right-0 lg:w-[62vw] xl:right-[2vw] xl:w-[54vw]"
+          className="pointer-events-none absolute bottom-20 right-[-8vw] z-10 aspect-[16/10] w-[86vw] max-w-[360px] origin-center transform-gpu opacity-25 sm:bottom-10 sm:right-[-2vw] sm:w-[64vw] sm:max-w-[520px] sm:opacity-35 md:bottom-[-5vh] md:right-[-8vw] md:w-[72vw] md:max-w-[980px] md:opacity-100 lg:right-0 lg:w-[62vw] xl:right-[2vw] xl:w-[54vw]"
           style={{ perspective: "1200px" }}
         >
           <div className="absolute inset-x-0 bottom-0 top-6 overflow-hidden rounded-lg border border-white/14 bg-[#0d0d14]/88 shadow-[0_40px_140px_rgba(0,0,0,0.7)] backdrop-blur-xl">

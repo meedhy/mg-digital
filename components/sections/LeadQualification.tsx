@@ -243,30 +243,21 @@ function LeadQualificationForm({ intent }: { intent: ProjectIntent }) {
   const questions = ["Quel est votre besoin ?", "Quel est votre objectif principal ?", "Quel budget envisagez-vous ?", "Comment pouvons-nous vous recontacter ?"];
 
   return (
-    <section id="contact" className="relative overflow-hidden bg-[#08080c] pb-16 pt-10 md:py-24 lg:py-32">
+    <section id="contact" className="relative overflow-hidden bg-[#08080c] pb-12 pt-8 md:py-20 lg:py-28">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(124,108,255,0.11),transparent_32%)]" />
-      <div className="page-shell relative grid gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
-        <div className="lg:sticky lg:top-32">
+      <div className="page-shell relative grid lg:grid-cols-[0.78fr_1.22fr] lg:items-start lg:gap-12">
+        <div className="hidden lg:sticky lg:top-32 lg:block">
           <p className="section-label">Votre projet</p>
           <h2 className="mt-5 text-[2.4rem] font-semibold leading-[1.02] text-white md:text-[3.5rem]">
             Parlons de votre <span className="font-editorial font-normal italic text-gradient">projet.</span>
           </h2>
-          <p className="mt-6 max-w-lg text-base leading-7 text-white/58 md:text-lg">
-            Répondez à quelques questions pour recevoir une première lecture de votre besoin.
-          </p>
-          <div className="mt-9 flex flex-wrap gap-2">
-            {["4 étapes", "Premier échange gratuit", "WhatsApp prérempli"].map((item) => (
-              <span key={item} className="rounded-full border border-white/10 px-3 py-2 text-xs text-white/42">
-                {item}
-              </span>
-            ))}
-          </div>
+          <p className="mt-6 max-w-sm text-base leading-7 text-white/58">Quelques réponses suffisent pour cadrer votre besoin.</p>
         </div>
 
         <form
           ref={formRef}
           onSubmit={handleSubmit}
-          className="min-h-[560px] rounded-lg border border-white/12 bg-[#0d0d13] p-5 shadow-[0_30px_100px_rgba(0,0,0,0.32)] md:min-h-[590px] md:p-8 lg:p-10"
+          className="min-h-[520px] rounded-lg border border-white/12 bg-[#0d0d13] p-4 shadow-[0_30px_100px_rgba(0,0,0,0.32)] sm:p-5 md:min-h-[560px] md:p-7 lg:min-h-[590px] lg:p-10"
           noValidate
         >
           <input
@@ -280,7 +271,14 @@ function LeadQualificationForm({ intent }: { intent: ProjectIntent }) {
             className="absolute -left-[9999px]"
           />
 
-          <div className="flex items-center justify-between gap-5">
+          <div className="border-b border-white/10 pb-5 lg:hidden">
+            <p className="text-[10px] font-bold uppercase text-white/38">Votre projet</p>
+            <h2 className="mt-2 text-[1.75rem] font-semibold leading-[1.02] text-white">
+              Parlons de votre <span className="font-editorial font-normal italic text-gradient">projet.</span>
+            </h2>
+          </div>
+
+          <div className="mt-5 flex items-center justify-between gap-5 lg:mt-0">
             <div>
               <p className="text-xs font-semibold uppercase text-white/32">Étape {step + 1} sur 4</p>
               {intent.offer && <p className="mt-2 text-xs text-[#a9a1ff]">Formule envisagée : {intent.offer}</p>}
@@ -294,7 +292,7 @@ function LeadQualificationForm({ intent }: { intent: ProjectIntent }) {
             aria-valuemin={1}
             aria-valuemax={4}
             aria-valuenow={step + 1}
-            className="mt-6 h-1 overflow-hidden rounded-full bg-white/8"
+            className="mt-4 h-1 overflow-hidden rounded-full bg-white/8 lg:mt-6"
           >
             <div
               className="h-full origin-left bg-gradient-to-r from-accent to-accent-secondary transition-transform duration-500 ease-premium"
@@ -317,9 +315,9 @@ function LeadQualificationForm({ intent }: { intent: ProjectIntent }) {
               </a>
             </div>
           ) : (
-            <div className="mt-9 flex min-h-[420px] flex-col">
+            <div className="mt-6 flex min-h-[380px] flex-col md:mt-8 md:min-h-[420px]">
               <fieldset className={step === 0 ? "block" : "hidden"} aria-hidden={step !== 0}>
-                <legend className="mb-7 text-2xl font-semibold text-white md:text-3xl">{questions[0]}</legend>
+                <legend className="mb-5 text-xl font-semibold text-white md:mb-7 md:text-3xl">{questions[0]}</legend>
                 <ChoiceGroup
                   name="projectType"
                   values={projectTypes}
@@ -330,7 +328,7 @@ function LeadQualificationForm({ intent }: { intent: ProjectIntent }) {
               </fieldset>
 
               <fieldset className={step === 1 ? "block" : "hidden"} aria-hidden={step !== 1}>
-                <legend className="mb-7 text-2xl font-semibold text-white md:text-3xl">{questions[1]}</legend>
+                <legend className="mb-5 text-xl font-semibold text-white md:mb-7 md:text-3xl">{questions[1]}</legend>
                 <ChoiceGroup
                   name="objective"
                   values={objectives}
@@ -341,7 +339,7 @@ function LeadQualificationForm({ intent }: { intent: ProjectIntent }) {
               </fieldset>
 
               <fieldset className={step === 2 ? "block" : "hidden"} aria-hidden={step !== 2}>
-                <legend className="mb-7 text-2xl font-semibold text-white md:text-3xl">{questions[2]}</legend>
+                <legend className="mb-5 text-xl font-semibold text-white md:mb-7 md:text-3xl">{questions[2]}</legend>
                 <ChoiceGroup
                   name="budget"
                   values={budgets}
@@ -352,7 +350,7 @@ function LeadQualificationForm({ intent }: { intent: ProjectIntent }) {
               </fieldset>
 
               <fieldset className={step === 3 ? "block" : "hidden"} aria-hidden={step !== 3}>
-                <legend className="mb-7 text-2xl font-semibold text-white md:text-3xl">{questions[3]}</legend>
+                <legend className="mb-5 text-xl font-semibold text-white md:mb-7 md:text-3xl">{questions[3]}</legend>
                 <div className="grid gap-4 md:grid-cols-2">
                   <label className="grid gap-2 text-sm font-semibold text-white/72">
                     Nom
@@ -424,7 +422,7 @@ function LeadQualificationForm({ intent }: { intent: ProjectIntent }) {
                 </p>
               )}
 
-              <div className="mt-auto flex flex-col-reverse gap-3 pt-8 sm:flex-row sm:justify-between">
+              <div className="mt-auto flex flex-col-reverse gap-3 pt-6 sm:flex-row sm:justify-between md:pt-8">
                 {step > 0 ? (
                   <button type="button" onClick={previousStep} className="button-secondary px-5">
                     <ArrowLeft className="button-arrow" size={16} />
