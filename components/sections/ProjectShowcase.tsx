@@ -237,110 +237,83 @@ function getPreviewSrc(src: string) {
     .replace(/\.(?:png|jpe?g)$/i, ".jpg");
 }
 
-function ProjectCard({
+function ProjectMosaic({
   project,
-  compact = false,
-  className = "",
+  projectIndex,
   buttonRef,
   onOpen,
 }: {
   project: Project;
-  compact?: boolean;
-  className?: string;
+  projectIndex: number;
   buttonRef: (element: HTMLButtonElement | null) => void;
-  onOpen: () => void;
+  onOpen: (imageIndex: number) => void;
 }) {
-  const [previewIndex, setPreviewIndex] = useState(0);
-  const [isPreviewing, setIsPreviewing] = useState(false);
-
-  useEffect(() => {
-    if (!isPreviewing) return;
-
-    const interval = window.setInterval(() => {
-      setPreviewIndex((current) => (current + 1) % project.images.length);
-    }, 1050);
-
-    return () => window.clearInterval(interval);
-  }, [isPreviewing, project.images.length]);
-
-  const preview = project.images[previewIndex];
-  const previewSrc = getPreviewSrc(preview.src);
+  const visibleImages = project.images.slice(0, 4);
 
   return (
-    <article
-      className={`group relative min-h-0 overflow-hidden rounded-[4px] bg-[#17171c] text-white ${className}`}
-      onMouseEnter={() => {
-        if (
-          window.innerWidth < 768 ||
-          !window.matchMedia("(hover: hover) and (pointer: fine)").matches ||
-          window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        ) {
-          return;
-        }
-        setPreviewIndex((current) => (current + 1) % project.images.length);
-        setIsPreviewing(true);
-      }}
-      onMouseLeave={() => {
-        setIsPreviewing(false);
-        setPreviewIndex(0);
-      }}
-    >
-      <div className="absolute inset-0 overflow-hidden bg-[#17171c]">
-        <Image
-          key={previewSrc}
-          src={previewSrc}
-          alt={preview.alt}
-          fill
-          unoptimized
-          sizes="(min-width: 1024px) 58vw, (min-width: 768px) 50vw, 100vw"
-          className="project-preview-in object-cover transition-transform duration-700 group-hover:scale-[1.025]"
-          style={{ objectPosition: preview.previewPosition ?? "center" }}
-        />
-
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/8 to-black/22" />
-
-        <div className="absolute inset-x-3 top-3 z-10 flex items-center justify-between gap-4 text-[9px] font-bold uppercase text-white/72 md:inset-x-4 md:top-4">
-          <span>
-            {project.number}
-          </span>
-          <span className="tabular-nums">
-            {String(previewIndex + 1).padStart(2, "0")} / {String(project.images.length).padStart(2, "0")}
-          </span>
+    <article className="border-t border-black/10 pt-5 first:border-t-0 first:pt-0 md:pt-8">
+      <header className="mb-4 flex items-end justify-between gap-4 md:mb-6">
+        <div className="min-w-0">
+          <h3 className="text-2xl font-semibold leading-none text-black/88 md:text-4xl">{project.name}</h3>
+          <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1.5">
+            {project.tags.map((tag) => (
+              <span key={tag} className="text-[9px] font-semibold text-black/42 md:text-[11px]">
+                {tag}
+              </span>
+            ))}
+          </div>
         </div>
-
-        <div className="absolute inset-x-3 top-8 z-10 h-px overflow-hidden bg-white/24 md:inset-x-4 md:top-10" aria-hidden="true">
-          <span
-            className="block h-full bg-white transition-[width] duration-300"
-            style={{ width: `${((previewIndex + 1) / project.images.length) * 100}%` }}
-          />
-        </div>
-      </div>
-
-      <div className={`absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-3 ${compact ? "p-3" : "p-5 md:p-7"}`}>
-        <div className="min-w-0 text-white">
-          <h3 className={`font-semibold leading-none ${compact ? "text-base sm:text-xl md:text-2xl" : "text-3xl md:text-5xl"}`}>
-            {project.name}
-          </h3>
-          <p className={`mt-2 truncate font-medium text-white/68 ${compact ? "text-[9px] sm:text-xs" : "text-xs md:text-sm"}`}>
-            {project.subtitle}
-          </p>
-        </div>
-        <span
-          aria-hidden="true"
-          className={`grid shrink-0 place-items-center rounded-full border border-white/28 bg-black/18 text-white transition duration-300 group-hover:bg-white group-hover:text-black ${compact ? "size-8" : "size-10"}`}
+        <button
+          type="button"
+          onClick={() => onOpen(0)}
+          className="group inline-flex min-h-10 shrink-0 items-center gap-2 border-b border-black/20 text-[10px] font-bold uppercase text-black/58 transition-colors hover:border-black hover:text-black"
         >
-          <ArrowUpRight size={compact ? 15 : 18} strokeWidth={1.8} />
-        </span>
-      </div>
+          Voir le projet
+          <ArrowUpRight size={14} strokeWidth={1.8} className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+        </button>
+      </header>
 
-      <button
-        ref={buttonRef}
-        type="button"
-        onClick={onOpen}
-        aria-haspopup="dialog"
-        aria-label={`Découvrir le projet ${project.name}, ${project.images.length} images`}
-        className="absolute inset-0 z-20 rounded-lg"
-      />
+      <div className="grid grid-cols-2 gap-1.5 md:gap-2 lg:auto-rows-[220px] lg:grid-flow-dense lg:grid-cols-12">
+        {visibleImages.map((image, imageIndex) => {
+          const isPrimary = imageIndex === 0;
+          return (
+            <button
+              key={image.src}
+              ref={isPrimary ? buttonRef : undefined}
+              type="button"
+              onClick={() => onOpen(imageIndex)}
+              aria-haspopup="dialog"
+              aria-label={`Découvrir ${project.name} : ${image.title}`}
+              className={`group relative overflow-hidden rounded-[4px] bg-[#17171c] text-left ${
+                isPrimary
+                  ? "col-span-2 aspect-[16/10] lg:col-span-7 lg:row-span-2 lg:aspect-auto"
+                  : imageIndex === 1
+                    ? "aspect-square lg:col-span-5 lg:aspect-auto"
+                    : imageIndex === 2
+                      ? "aspect-square lg:col-span-3 lg:aspect-auto"
+                      : "hidden aspect-square md:block lg:col-span-2 lg:aspect-auto"
+              } ${projectIndex % 2 === 1 && isPrimary ? "lg:col-start-6" : ""}`}
+            >
+              <Image
+                src={getPreviewSrc(image.src)}
+                alt={image.alt}
+                fill
+                unoptimized
+                sizes="(min-width: 1024px) 58vw, (min-width: 768px) 50vw, 100vw"
+                className="object-cover transition duration-700 group-hover:scale-[1.025]"
+                style={{ objectPosition: image.previewPosition ?? "center" }}
+              />
+              <span className="absolute inset-0 bg-gradient-to-t from-black/62 via-transparent to-black/8" />
+              <span className="absolute inset-x-3 bottom-3 flex items-end justify-between gap-3 text-white md:inset-x-4 md:bottom-4">
+                <span className="text-[9px] font-semibold leading-4 text-white/82 md:text-xs">{image.title}</span>
+                <span className="grid size-7 shrink-0 place-items-center rounded-full border border-white/28 bg-black/20 transition-colors group-hover:bg-white group-hover:text-black">
+                  <ArrowUpRight size={13} strokeWidth={1.8} />
+                </span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
     </article>
   );
 }
@@ -374,8 +347,8 @@ export default function ProjectShowcase() {
     window.requestAnimationFrame(() => trigger?.focus());
   }, [activeProjectIndex]);
 
-  function openGallery(projectIndex: number) {
-    setActiveImageIndex(0);
+  function openGallery(projectIndex: number, imageIndex = 0) {
+    setActiveImageIndex(imageIndex);
     setActiveProjectIndex(projectIndex);
   }
 
@@ -577,22 +550,17 @@ export default function ProjectShowcase() {
       : null;
 
   return (
-    <div className="mt-7 md:mt-10">
-      <div className="grid grid-cols-2 gap-1.5 md:gap-2 lg:auto-rows-[240px] lg:grid-cols-12">
+    <div className="mt-8 md:mt-12">
+      <div className="grid gap-10 md:gap-16 lg:gap-20">
         {projects.map((project, index) => (
-          <ProjectCard
+          <ProjectMosaic
             key={project.name}
             project={project}
-            compact={index !== 0}
-            className={
-              index === 0
-                ? "col-span-2 aspect-square md:aspect-[16/10] lg:col-span-7 lg:row-span-2 lg:aspect-auto"
-                : "aspect-square lg:col-span-5 lg:aspect-auto"
-            }
+            projectIndex={index}
             buttonRef={(element) => {
               cardRefs.current[index] = element;
             }}
-            onOpen={() => openGallery(index)}
+            onOpen={(imageIndex) => openGallery(index, imageIndex)}
           />
         ))}
       </div>

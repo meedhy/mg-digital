@@ -1,11 +1,13 @@
-import { ExternalLink } from "lucide-react";
+import Image from "next/image";
+import { ExternalLink, Mail } from "lucide-react";
 import BrandMark from "@/components/ui/BrandMark";
 import TrackedLink from "@/components/ui/TrackedLink";
+import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
 import { whatsappHref } from "@/lib/contact";
 
 const navigation = [
-  ["Services", "#services"],
   ["Réalisations", "#realisations"],
+  ["Services", "#services"],
   ["Formules", "#offres"],
   ["Méthode", "#methode"],
   ["Votre projet", "#contact"],
@@ -36,31 +38,51 @@ export default function Footer() {
 
         <div>
           <p className="text-xs font-semibold uppercase text-white/32">Contact</p>
-          <div className="mt-5 grid gap-3">
+          <div className="mt-5 flex items-center gap-3">
+            <div className="relative size-14 shrink-0 overflow-hidden rounded-full border border-white/14 bg-white/5">
+              <Image
+                src="/about/portrait-medhi-ghali.png"
+                alt="Portrait de Medhi Ghali"
+                fill
+                sizes="56px"
+                className="object-cover"
+              />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-white/82">Parlons de votre projet</p>
+              <p className="mt-1 flex items-center gap-1.5 text-[11px] text-white/40">
+                <span className="size-2 rounded-full bg-[#29c47d]" />
+                En ligne · lun–sam, 9h–20h
+              </p>
+            </div>
+          </div>
+          <div className="mt-5 flex flex-wrap gap-2">
             <TrackedLink
               href={whatsappHref()}
               target="_blank"
               rel="noopener noreferrer"
               eventName="whatsapp_click"
               eventPayload={{ source: "footer" }}
-              className="w-fit text-sm text-white/48 transition-colors hover:text-white"
+              className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/12 px-4 text-sm text-white/68 transition-colors hover:border-white/24 hover:text-white"
             >
-              WhatsApp
+              <WhatsAppIcon size={15} className="text-[#39d47a]" />
+              Échanger
             </TrackedLink>
             <TrackedLink
               href="mailto:hello@medhighali.com"
               eventName="email_click"
               eventPayload={{ source: "footer" }}
-              className="w-fit text-sm text-white/48 transition-colors hover:text-white"
+              className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/12 px-4 text-sm text-white/68 transition-colors hover:border-white/24 hover:text-white"
             >
-              hello@medhighali.com
+              <Mail size={15} aria-hidden="true" />
+              Email
             </TrackedLink>
             <a
               href="https://linkedin.com/in/medhi-ghali-62a0a2154"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Profil LinkedIn de Medhi Ghali"
-              className="mt-2 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-white/48 transition-colors hover:border-white/24 hover:text-white"
+              className="flex size-10 items-center justify-center rounded-full border border-white/12 text-white/48 transition-colors hover:border-white/24 hover:text-white"
             >
               <ExternalLink size={17} />
             </a>

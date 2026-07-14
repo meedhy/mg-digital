@@ -176,15 +176,15 @@ function MobileObjectivePanel({ objective, index }: { objective: Objective; inde
 
   return (
     <article className="flex h-full min-h-0 flex-col p-4" aria-live="polite">
-      <div className="flex items-start justify-between gap-4">
-        <h3 className="text-[1.35rem] font-semibold leading-tight text-white">{objective.title}</h3>
-        <span className="flex size-10 shrink-0 items-center justify-center rounded-full border border-white/14 bg-white/[0.075] text-white/76">
-          <Icon size={18} strokeWidth={1.7} />
+      <div className="flex items-center gap-3">
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-white/14 bg-white/[0.075] text-white/76">
+          <Icon size={17} strokeWidth={1.7} />
         </span>
+        <h3 className="text-[1.35rem] font-semibold leading-tight text-white">{objective.title}</h3>
       </div>
 
-      <p className="mt-2 text-xs leading-5 text-white/54">{objective.description}</p>
-      <div className="mt-2 flex flex-wrap gap-1.5" aria-label="Exemples d’activités">
+      <p className="mt-1.5 text-xs leading-5 text-white/54">{objective.description}</p>
+      <div className="mt-1.5 flex flex-wrap gap-1.5" aria-label="Exemples d’activités">
         {[objective.persona, ...objective.clientTypes].map((clientType) => (
           <span key={clientType} className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[9px] font-medium text-white/58">
             {clientType}
@@ -503,10 +503,10 @@ export default function BusinessObjectives() {
       <div className="objectives-motion-stage objectives-sticky sticky top-0 mx-auto h-screen w-full max-w-[1440px] grid-cols-[0.92fr_1.08fr] items-center gap-12 px-12 xl:px-20">
         <div className="max-w-[540px]">
           <SectionHeading
-            label="Votre objectif d’abord"
+            label="Résultats"
             className="objectives-motion-heading"
           >
-            Votre site, en situation.
+            Ce que votre site peut faire pour vous.
           </SectionHeading>
 
           <nav
@@ -589,7 +589,7 @@ export default function BusinessObjectives() {
         </div>
 
         <div className="hidden gap-8 md:grid">
-          <SectionHeading label="Votre objectif d’abord">Votre site, en situation.</SectionHeading>
+          <SectionHeading label="Résultats">Ce que votre site peut faire pour vous.</SectionHeading>
           <div className="grid grid-cols-2 gap-4">
             {objectives.map((objective, index) => (
               <ObjectiveCard key={objective.title} objective={objective} index={index} compact />

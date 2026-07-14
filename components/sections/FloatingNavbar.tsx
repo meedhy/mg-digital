@@ -8,8 +8,8 @@ import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
 import { whatsappHref } from "@/lib/contact";
 
 const links = [
-  { href: "#services", label: "Services" },
   { href: "#realisations", label: "Réalisations" },
+  { href: "#services", label: "Services" },
   { href: "#offres", label: "Formules" },
   { href: "#methode", label: "Méthode" },
   { href: "#contact", label: "Votre projet" },
@@ -23,7 +23,7 @@ export default function FloatingNavbar() {
   const [activeHref, setActiveHref] = useState("");
   const mobileLinksRef = useRef<HTMLDivElement>(null);
   const mobileLinkRefs = useRef<Array<HTMLAnchorElement | null>>([]);
-  const hideMobileContactBar = activeHref === "#offres" || activeHref === "#contact";
+  const hideMobileContactBar = activeHref === "#realisations" || activeHref === "#offres" || activeHref === "#contact";
 
   useEffect(() => {
     let animationFrame = 0;

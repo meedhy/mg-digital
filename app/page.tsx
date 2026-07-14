@@ -15,9 +15,9 @@ export default function Home() {
       <FloatingNavbar />
       <main>
         <HeroExperience />
+        <ExpertiseSection />
         <ServicesOverview />
         <BusinessObjectives />
-        <ExpertiseSection />
         <OffersExperience />
         <ProcessExperience />
         <LeadQualification />
