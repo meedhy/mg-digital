@@ -21,9 +21,23 @@ const chatButtonClassName =
 export default function FloatingNavbar() {
   const [scrolled, setScrolled] = useState(false);
   const [activeHref, setActiveHref] = useState("");
+  const [identityCardVisible, setIdentityCardVisible] = useState(false);
   const mobileLinksRef = useRef<HTMLDivElement>(null);
   const mobileLinkRefs = useRef<Array<HTMLAnchorElement | null>>([]);
-  const hideMobileContactBar = activeHref === "#realisations" || activeHref === "#offres" || activeHref === "#contact";
+  const hideMobileContactBar = identityCardVisible || activeHref === "#realisations" || activeHref === "#offres" || activeHref === "#contact";
+
+  useEffect(() => {
+    const identityCard = document.querySelector<HTMLElement>("#apropos");
+    if (!identityCard) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIdentityCardVisible(entry.isIntersecting),
+      { threshold: 0.08 }
+    );
+
+    observer.observe(identityCard);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     let animationFrame = 0;

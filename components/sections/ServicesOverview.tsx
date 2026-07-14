@@ -32,16 +32,13 @@ export default function ServicesOverview() {
   return (
     <section id="services" className="border-t border-white/8 bg-canvas-soft pb-6 pt-12 text-white md:pb-8 md:pt-20">
       <div className="page-shell">
-        <div className="grid gap-4 border-b border-white/10 pb-7 md:grid-cols-[0.9fr_1.1fr] md:items-end md:gap-16 md:pb-10">
-          <div>
+        <div className="border-b border-white/10 pb-7 md:pb-10">
+          <div className="max-w-5xl">
             <p className="section-label">Services</p>
-            <h2 className="mt-4 max-w-lg text-[2rem] font-semibold leading-[0.98] md:text-5xl">
-              Ce que je peux prendre <span className="font-editorial font-normal italic text-white/58">en charge.</span>
+            <h2 className="mt-4 text-[2rem] font-semibold leading-[0.98] md:text-5xl">
+              Un accompagnement continu, <span className="font-editorial font-normal italic text-white/58">jusqu’au site en ligne.</span>
             </h2>
           </div>
-          <p className="max-w-xl text-sm leading-6 text-white/56 md:text-lg md:leading-8">
-            Un accompagnement continu, de la clarification du besoin jusqu’au site en ligne.
-          </p>
         </div>
 
         <div className="grid grid-cols-2 border-b border-white/10 md:grid-cols-4">

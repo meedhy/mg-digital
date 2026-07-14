@@ -121,7 +121,7 @@ export default function HeroExperience() {
         <div
           ref={interfaceRef}
           aria-hidden="true"
-          className="pointer-events-none absolute bottom-20 right-[-8vw] z-10 aspect-[16/10] w-[86vw] max-w-[360px] origin-center transform-gpu opacity-25 sm:bottom-10 sm:right-[-2vw] sm:w-[64vw] sm:max-w-[520px] sm:opacity-35 md:bottom-[-5vh] md:right-[-8vw] md:w-[72vw] md:max-w-[980px] md:opacity-100 lg:right-0 lg:w-[62vw] xl:right-[2vw] xl:w-[54vw]"
+          className="pointer-events-none absolute bottom-20 right-[-8vw] z-10 hidden aspect-[16/10] w-[86vw] max-w-[360px] origin-center transform-gpu opacity-25 md:bottom-[-5vh] md:right-[-8vw] md:block md:w-[72vw] md:max-w-[980px] md:opacity-100 lg:right-0 lg:w-[62vw] xl:right-[2vw] xl:w-[54vw]"
           style={{ perspective: "1200px" }}
         >
           <div className="absolute inset-x-0 bottom-0 top-6 overflow-hidden rounded-lg border border-white/14 bg-[#0d0d14]/88 shadow-[0_40px_140px_rgba(0,0,0,0.7)] backdrop-blur-xl">

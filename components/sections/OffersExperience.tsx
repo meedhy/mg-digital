@@ -8,7 +8,6 @@ import { trackEvent } from "@/lib/tracking";
 
 type Offer = {
   id: string;
-  tabLabel: string;
   category: string;
   title: string;
   description: string;
@@ -35,30 +34,7 @@ const situationOptions: Array<{ id: Situation; label: string }> = [
 const offerGroups: Record<Situation, Offer[]> = {
   new: [
     {
-      id: "conseil-cadrage",
-      tabLabel: "Conseil & cadrage",
-      category: "Conseil",
-      title: "Définir le bon projet avant de construire",
-      description: "Pour clarifier votre idée, vos objectifs et les fonctionnalités réellement nécessaires avant d’investir.",
-      features: [
-        "Analyse de l’activité et des objectifs",
-        "Définition des utilisateurs et des besoins",
-        "Structure, contenus et fonctionnalités prioritaires",
-        "Recommandations et feuille de route",
-      ],
-      deliverable: "Un projet clairement défini, priorisé et prêt à être conçu.",
-      price: "À partir de 300 $",
-      priceNote: "Selon le périmètre et le niveau de cadrage nécessaire.",
-      cta: "Cadrer mon projet",
-      recommended: false,
-      projectType: "Auditer ou cadrer",
-      objective: "Cadrer un nouveau projet",
-      budget: "Moins de 500 $",
-      transitionNote: "À l’issue de l’accompagnement, je peux également prendre en charge la conception et la réalisation du projet.",
-    },
-    {
       id: "creation-complete",
-      tabLabel: "Création complète",
       category: "Conception + développement",
       title: "Construire votre site de bout en bout",
       description: "Un accompagnement complet, de la clarification du besoin jusqu’à la mise en ligne.",
@@ -80,30 +56,7 @@ const offerGroups: Record<Situation, Offer[]> = {
   ],
   existing: [
     {
-      id: "audit",
-      tabLabel: "Audit & conseil",
-      category: "Audit & conseil",
-      title: "Savoir quoi améliorer et dans quel ordre",
-      description: "Un diagnostic clair pour identifier les problèmes, les opportunités et les priorités de votre site.",
-      features: [
-        "Analyse de l’offre et des objectifs",
-        "Audit UX/UI et responsive",
-        "Identification des points de friction",
-        "Recommandations priorisées et feuille de route",
-      ],
-      deliverable: "Un plan d’action concret pour améliorer ou refondre votre site.",
-      price: "À partir de 250 $",
-      priceNote: "Selon le nombre de pages et la complexité du site.",
-      cta: "Auditer mon site",
-      recommended: false,
-      projectType: "Auditer ou cadrer",
-      objective: "Améliorer un projet existant",
-      budget: "Moins de 500 $",
-      transitionNote: "À l’issue de l’accompagnement, je peux également prendre en charge la conception et la réalisation du projet.",
-    },
-    {
       id: "refonte-complete",
-      tabLabel: "Refonte complète",
       category: "Refonte + développement",
       title: "Transformer votre site de bout en bout",
       description: "Pour repenser l’expérience, le design, les contenus et la base technique de votre site.",
@@ -216,28 +169,13 @@ function OfferCard({ offer, index }: { offer: Offer; index: number }) {
 
 export default function OffersExperience() {
   const [activeSituation, setActiveSituation] = useState<Situation>("new");
-  const [activeOfferIndex, setActiveOfferIndex] = useState(0);
   const situationTabRefs = useRef<Array<HTMLButtonElement | null>>([]);
-  const offerTabRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const { openLeadFlow } = useProjectIntent();
-  const activeOffers = offerGroups[activeSituation];
-  const activeOffer = activeOffers[activeOfferIndex];
+  const activeOffer = offerGroups[activeSituation][0];
 
   function selectSituation(situation: Situation, track = true) {
     setActiveSituation(situation);
-    setActiveOfferIndex(0);
     if (track) trackEvent("offer_navigation_click", { offer: "Situation", situation });
-  }
-
-  function selectOffer(index: number, track = true) {
-    setActiveOfferIndex(index);
-    if (track) {
-      trackEvent("offer_navigation_click", {
-        offer: activeOffers[index].category,
-        situation: activeSituation,
-        position: index + 1,
-      });
-    }
   }
 
   function handleSituationKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
@@ -251,19 +189,6 @@ export default function OffersExperience() {
     event.preventDefault();
     selectSituation(situationOptions[nextIndex].id);
     situationTabRefs.current[nextIndex]?.focus();
-  }
-
-  function handleOfferKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
-    let nextIndex = index;
-    if (event.key === "ArrowRight") nextIndex = (index + 1) % activeOffers.length;
-    else if (event.key === "ArrowLeft") nextIndex = (index - 1 + activeOffers.length) % activeOffers.length;
-    else if (event.key === "Home") nextIndex = 0;
-    else if (event.key === "End") nextIndex = activeOffers.length - 1;
-    else return;
-
-    event.preventDefault();
-    selectOffer(nextIndex);
-    offerTabRefs.current[nextIndex]?.focus();
   }
 
   function openCustomProject() {
@@ -286,13 +211,13 @@ export default function OffersExperience() {
               Choisissez votre <span className="font-editorial font-normal italic text-white/68">accompagnement.</span>
             </h2>
             <p className="mt-3 max-w-sm text-xs leading-5 text-white/52">
-              Partez de votre situation pour trouver l’accompagnement adapté.
+              Deux solutions complètes, selon que votre site existe déjà ou non.
             </p>
           </div>
 
           <SectionHeading
             label="Formules"
-            text="Partez de votre situation pour choisir le bon niveau d’intervention. Le périmètre est confirmé après un échange."
+            text="Deux solutions complètes, selon que votre site existe déjà ou non. Le périmètre est confirmé après un échange."
             className="hidden md:block"
           >
             Choisissez votre <span className="font-editorial font-normal italic text-white/68">accompagnement.</span>
@@ -319,7 +244,7 @@ export default function OffersExperience() {
                     onClick={() => selectSituation(situation.id)}
                     onKeyDown={(event) => handleSituationKeyDown(event, index)}
                     aria-selected={isActive}
-                    aria-controls="offer-selector"
+                    aria-controls="offer-panel"
                     className={`min-h-14 border-r border-white/10 px-3 py-2 text-center text-[11px] font-semibold leading-4 transition-colors last:border-r-0 sm:text-xs md:min-h-16 md:text-sm ${
                       isActive ? "bg-white/[0.1] text-white" : "text-white/42 hover:bg-white/[0.04] hover:text-white/72"
                     }`}
@@ -331,57 +256,25 @@ export default function OffersExperience() {
             </div>
           </nav>
 
-          <nav
-            id="offer-selector"
-            aria-label="Choisir un accompagnement"
-            className="mt-3 overflow-hidden rounded-lg border border-white/10 bg-white/[0.02]"
-          >
-            <div role="tablist" aria-label="Offres disponibles" className="grid grid-cols-2">
-              {activeOffers.map((offer, index) => {
-                const isActive = index === activeOfferIndex;
-                return (
-                  <button
-                    key={offer.id}
-                    ref={(element) => {
-                      offerTabRefs.current[index] = element;
-                    }}
-                    id={`offer-tab-${offer.id}`}
-                    type="button"
-                    role="tab"
-                    tabIndex={isActive ? 0 : -1}
-                    onClick={() => selectOffer(index)}
-                    onKeyDown={(event) => handleOfferKeyDown(event, index)}
-                    aria-selected={isActive}
-                    aria-controls="offer-panel"
-                    className={`min-h-14 border-r border-white/10 px-3 py-2 text-center text-[11px] font-semibold leading-4 transition-colors last:border-r-0 md:min-h-14 md:px-4 md:text-xs ${
-                      isActive ? "bg-white/[0.085] text-white" : "text-white/40 hover:bg-white/[0.04] hover:text-white/72"
-                    }`}
-                  >
-                    {offer.tabLabel}
-                  </button>
-                );
-              })}
-            </div>
-          </nav>
         </div>
 
         <div
           id="offer-panel"
           role="tabpanel"
-          aria-labelledby={`offer-tab-${activeOffer.id}`}
+          aria-labelledby={`situation-tab-${activeSituation}`}
           className="panel-in mt-4 max-w-[960px] md:mt-5"
           key={`${activeSituation}-${activeOffer.id}`}
         >
-          <OfferCard offer={activeOffer} index={activeOfferIndex} />
+          <OfferCard offer={activeOffer} index={activeSituation === "new" ? 0 : 1} />
         </div>
 
         <div className="mt-8 flex max-w-[960px] flex-col gap-4 border-t border-white/10 pt-7 sm:flex-row sm:items-center sm:justify-between">
           <p className="max-w-2xl text-xs leading-5 text-white/44 md:text-sm md:leading-6">
-            E-commerce, plateforme ou besoin spécifique ? Le projet est étudié sur mesure après un premier échange.
+            Un besoin précis, une fonctionnalité ou un projet différent ? Décrivez votre demande et je vous répondrai avec une proposition adaptée.
           </p>
           <button type="button" onClick={openCustomProject} className="button-secondary shrink-0">
             <MessageCircle size={17} aria-hidden="true" />
-            Parler d’un projet sur mesure
+            Faire une demande
           </button>
         </div>
         </div>

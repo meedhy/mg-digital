@@ -252,23 +252,14 @@ function ProjectMosaic({
 
   return (
     <article className="border-t border-black/10 pt-5 first:border-t-0 first:pt-0 md:pt-8">
-      <header className="mb-4 flex items-end justify-between gap-4 md:mb-6">
-        <div className="min-w-0">
-          <h3 className="text-2xl font-semibold leading-none text-black/88 md:text-4xl">{project.name}</h3>
-          <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1.5">
-            {project.tags.map((tag) => (
-              <span key={tag} className="text-[9px] font-semibold text-black/42 md:text-[11px]">
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
+      <header className="mb-3 flex items-center justify-between gap-4 md:mb-5">
+        <h3 className="text-2xl font-semibold leading-none text-black/88 md:text-4xl">{project.name}</h3>
         <button
           type="button"
           onClick={() => onOpen(0)}
-          className="group inline-flex min-h-10 shrink-0 items-center gap-2 border-b border-black/20 text-[10px] font-bold uppercase text-black/58 transition-colors hover:border-black hover:text-black"
+          aria-label={`Voir le projet ${project.name}`}
+          className="group grid size-10 shrink-0 place-items-center rounded-full border border-black/16 text-black/58 transition-colors hover:border-black hover:bg-black hover:text-white"
         >
-          Voir le projet
           <ArrowUpRight size={14} strokeWidth={1.8} className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
         </button>
       </header>
@@ -303,10 +294,9 @@ function ProjectMosaic({
                 className="object-cover transition duration-700 group-hover:scale-[1.025]"
                 style={{ objectPosition: image.previewPosition ?? "center" }}
               />
-              <span className="absolute inset-0 bg-gradient-to-t from-black/62 via-transparent to-black/8" />
-              <span className="absolute inset-x-3 bottom-3 flex items-end justify-between gap-3 text-white md:inset-x-4 md:bottom-4">
-                <span className="text-[9px] font-semibold leading-4 text-white/82 md:text-xs">{image.title}</span>
-                <span className="grid size-7 shrink-0 place-items-center rounded-full border border-white/28 bg-black/20 transition-colors group-hover:bg-white group-hover:text-black">
+              <span className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/10" />
+              <span className="absolute bottom-3 right-3 text-white opacity-90 md:bottom-4 md:right-4">
+                <span className="grid size-7 place-items-center rounded-full border border-white/30 bg-black/24 transition-colors group-hover:bg-white group-hover:text-black">
                   <ArrowUpRight size={13} strokeWidth={1.8} />
                 </span>
               </span>
