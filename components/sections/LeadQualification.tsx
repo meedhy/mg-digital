@@ -6,8 +6,22 @@ import { ProjectIntent, useProjectIntent } from "@/components/providers/ProjectI
 import { whatsappHref } from "@/lib/contact";
 import { trackEvent } from "@/lib/tracking";
 
-const projectTypes = ["Créer un site", "Refaire un site", "Vendre en ligne", "Créer une plateforme", "Je ne sais pas encore"];
-const objectives = ["Présenter mon activité", "Générer des demandes", "Vendre", "Digitaliser un service"];
+const projectTypes = [
+  "Auditer ou cadrer",
+  "Concevoir l’UX/UI",
+  "Créer un site",
+  "Refaire un site",
+  "Projet sur mesure",
+  "Je ne sais pas encore",
+];
+const objectives = [
+  "Améliorer un projet existant",
+  "Préparer le développement",
+  "Lancer un site complet",
+  "Moderniser un site existant",
+  "Fonctionnalités avancées",
+  "Je souhaite être conseillé",
+];
 const budgets = ["Moins de 500 $", "500 $ à 900 $", "1 000 $ à 2 000 $", "Plus de 2 000 $", "J’ai besoin d’être conseillé"];
 const nextStepLabels = ["Définir mon objectif", "Choisir mon budget", "Ajouter mes coordonnées"];
 const fieldClassName =
@@ -229,11 +243,11 @@ function LeadQualificationForm({ intent }: { intent: ProjectIntent }) {
   const questions = ["Quel est votre besoin ?", "Quel est votre objectif principal ?", "Quel budget envisagez-vous ?", "Comment pouvons-nous vous recontacter ?"];
 
   return (
-    <section id="contact" className="relative overflow-hidden bg-[#08080c] py-24 md:py-28 lg:py-32">
+    <section id="contact" className="relative overflow-hidden bg-[#08080c] pb-16 pt-10 md:py-24 lg:py-32">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(124,108,255,0.11),transparent_32%)]" />
       <div className="page-shell relative grid gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
         <div className="lg:sticky lg:top-32">
-          <p className="section-label">Lancer votre projet</p>
+          <p className="section-label">Votre projet</p>
           <h2 className="mt-5 text-[2.4rem] font-semibold leading-[1.02] text-white md:text-[3.5rem]">
             Parlons de votre <span className="font-editorial font-normal italic text-gradient">projet.</span>
           </h2>

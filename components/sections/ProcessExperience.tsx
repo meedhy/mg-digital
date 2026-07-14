@@ -30,7 +30,7 @@ const launchStages = [
   "Site prêt",
 ];
 
-function ProcessVisual({ active }: { active: number }) {
+function ProcessVisual({ active, compact = false }: { active: number; compact?: boolean }) {
   const [launchPhase, setLaunchPhase] = useState(-1);
   const isLaunching = active === steps.length - 1;
   const launchComplete = isLaunching && launchPhase === launchStages.length - 1;
@@ -56,7 +56,7 @@ function ProcessVisual({ active }: { active: number }) {
   }, [isLaunching]);
 
   return (
-    <div className="relative mx-auto aspect-[1.12/1] w-full max-w-[560px]">
+    <div className={`relative mx-auto w-full max-w-[560px] ${compact ? "aspect-[1.52/1] max-h-[230px]" : "aspect-[1.12/1]"}`}>
       <span className="sr-only" aria-live="polite">
         {isLaunching && launchPhase >= 0 ? `${launchStages[launchPhase]}, ${launchProgress}%` : ""}
       </span>
@@ -69,7 +69,7 @@ function ProcessVisual({ active }: { active: number }) {
             ? "scale-100 border-success/40 shadow-[0_32px_120px_rgba(41,196,125,0.16)] opacity-100"
             : active >= 1
               ? "scale-100 border-white/14 opacity-100"
-              : "scale-[0.72] border-accent/30 opacity-35"
+              : "scale-[0.88] border-accent/30 opacity-70"
         }`}
       >
         <div
@@ -95,7 +95,7 @@ function ProcessVisual({ active }: { active: number }) {
                   ? "rotate-0 bg-success"
                   : active >= 2
                     ? "rotate-0 bg-gradient-to-br from-accent to-accent-secondary"
-                    : "rotate-45 bg-white/8"
+                    : "rotate-45 bg-white/14"
               }`}
             />
             <div className="mt-8 grid gap-3">
@@ -103,7 +103,7 @@ function ProcessVisual({ active }: { active: number }) {
                 <span
                   key={width}
                   className={`h-1.5 rounded-full transition-all duration-500 ${width} ${
-                    active >= 1 ? "translate-x-0 bg-white/12 opacity-100" : "translate-x-4 bg-white/5 opacity-0"
+                    active >= 1 ? "translate-x-0 bg-white/12 opacity-100" : "translate-x-2 bg-white/8 opacity-55"
                   }`}
                   style={{ transitionDelay: `${index * 55}ms` }}
                 />
@@ -155,28 +155,32 @@ function ProcessVisual({ active }: { active: number }) {
         </div>
       </div>
 
-      <div
-        aria-hidden="true"
-        className={`absolute left-[2%] top-[8%] flex h-24 w-24 items-center justify-center rounded-full border transition-all duration-700 ${
-          active === 0
-            ? "scale-100 border-accent/50 bg-accent/12 opacity-100"
-            : "scale-75 border-white/8 bg-transparent opacity-20"
-        }`}
-      >
-        <span className="h-3 w-3 rounded-full bg-[#9f96ff] shadow-[0_0_34px_rgba(124,108,255,0.75)]" />
-      </div>
+      {!compact && (
+        <>
+          <div
+            aria-hidden="true"
+            className={`absolute left-[2%] top-[8%] flex h-24 w-24 items-center justify-center rounded-full border transition-all duration-700 ${
+              active === 0
+                ? "scale-100 border-accent/50 bg-accent/12 opacity-100"
+                : "scale-75 border-white/8 bg-transparent opacity-20"
+            }`}
+          >
+            <span className="h-3 w-3 rounded-full bg-[#9f96ff] shadow-[0_0_34px_rgba(124,108,255,0.75)]" />
+          </div>
 
-      <div
-        aria-hidden="true"
-        className={`absolute bottom-[6%] right-[2%] flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold transition-all duration-700 ${
-          active >= 4 && !isLaunching
-            ? "translate-y-0 border-success/25 bg-success/10 text-success opacity-100"
-            : "translate-y-4 border-white/8 bg-black/20 text-white/20 opacity-0"
-        }`}
-      >
-        <ScanSearch size={14} />
-        Qualité validée
-      </div>
+          <div
+            aria-hidden="true"
+            className={`absolute bottom-[6%] right-[2%] flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold transition-all duration-700 ${
+              active >= 4 && !isLaunching
+                ? "translate-y-0 border-success/25 bg-success/10 text-success opacity-100"
+                : "translate-y-4 border-white/8 bg-black/20 text-white/20 opacity-0"
+            }`}
+          >
+            <ScanSearch size={14} />
+            Qualité validée
+          </div>
+        </>
+      )}
 
       <div
         aria-hidden="true"
@@ -229,6 +233,8 @@ function ProcessVisual({ active }: { active: number }) {
 export default function ProcessExperience() {
   const sectionRef = useRef<HTMLElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
+  const mobileTabsRef = useRef<HTMLDivElement>(null);
+  const mobileTabRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const activeRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -236,14 +242,20 @@ export default function ProcessExperience() {
     const section = sectionRef.current;
     if (!section) return;
 
-    const sectionTop = window.scrollY + section.getBoundingClientRect().top;
-    const scrollRange = Math.max(0, section.offsetHeight - window.innerHeight);
-    const progress = Math.min(0.98, Math.max(0.02, index / (steps.length - 1)));
-
     trackEvent("process_step_navigation_click", {
       step: steps[index].number,
       title: steps[index].title,
     });
+
+    if (window.matchMedia("(max-width: 1023px)").matches) {
+      activeRef.current = index;
+      setActiveIndex(index);
+      return;
+    }
+
+    const sectionTop = window.scrollY + section.getBoundingClientRect().top;
+    const scrollRange = Math.max(0, section.offsetHeight - window.innerHeight);
+    const progress = Math.min(0.98, Math.max(0.02, index / (steps.length - 1)));
     const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
     window.scrollTo({ top: sectionTop + scrollRange * progress, behavior });
   }
@@ -280,13 +292,22 @@ export default function ProcessExperience() {
     return () => media.revert();
   }, []);
 
+  useEffect(() => {
+    if (!window.matchMedia("(max-width: 767px)").matches) return;
+    mobileTabRefs.current[activeIndex]?.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      block: "nearest",
+      inline: "center",
+    });
+  }, [activeIndex]);
+
   const activeStep = steps[activeIndex];
 
   return (
     <section
       ref={sectionRef}
       id="methode"
-      className="process-sequence relative border-t border-white/8 bg-[#08080c] py-24 lg:h-[270vh] lg:py-0"
+      className="process-sequence relative border-t border-white/8 bg-[#08080c] pb-16 pt-10 md:py-24 lg:h-[220vh] lg:py-0"
     >
       <div className="process-motion-stage process-sticky sticky top-0 mx-auto h-screen w-full max-w-[1440px] grid-cols-[0.88fr_1.12fr] items-center gap-12 px-12 xl:px-20">
         <div className="max-w-[520px]">
@@ -361,57 +382,128 @@ export default function ProcessExperience() {
         <ProcessVisual active={activeIndex} />
       </div>
 
-      <div className="process-static page-shell gap-10">
-        <div className="max-w-3xl">
+      <div className="process-static page-shell gap-7 md:gap-10">
+        <div className="min-w-0 md:hidden">
+          <header className="pb-5">
+            <p className="text-[10px] font-bold uppercase text-white/38">Notre méthode</p>
+            <h2 className="mt-3 text-[1.75rem] font-semibold leading-[1.02] text-white">
+              Comment votre site <span className="font-editorial font-normal italic text-white/58">prend forme.</span>
+            </h2>
+          </header>
+
+          <nav aria-label="Étapes de la méthode" className="border-y border-white/10">
+            <div ref={mobileTabsRef} className="flex snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {steps.map((step, index) => {
+                const Icon = step.icon;
+                const isActive = index === activeIndex;
+                return (
+                  <button
+                    key={step.number}
+                    ref={(node) => { mobileTabRefs.current[index] = node; }}
+                    type="button"
+                    onClick={() => navigateToStep(index)}
+                    aria-current={isActive ? "step" : undefined}
+                    aria-controls="mobile-process-step"
+                    className={`relative flex min-h-[72px] w-[43%] shrink-0 snap-center items-center gap-2.5 border-r border-white/8 px-3 text-left transition-colors ${
+                      isActive ? "bg-white/[0.09] text-white" : "text-white/40"
+                    }`}
+                  >
+                    <Icon size={16} strokeWidth={1.7} className={isActive ? "text-[#a9a1ff]" : "text-white/24"} />
+                    <span className="min-w-0">
+                      <span className={`block text-[8px] font-bold ${isActive ? "text-[#a9a1ff]" : "text-white/22"}`}>{step.number}</span>
+                      <span className="mt-0.5 block text-[11px] font-semibold">{step.title}</span>
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      className={`absolute inset-x-0 bottom-0 h-0.5 bg-[#9f96ff] transition-opacity ${isActive ? "opacity-100" : "opacity-0"}`}
+                    />
+                  </button>
+                );
+              })}
+            </div>
+          </nav>
+
+          <article id="mobile-process-step" className="panel-in mt-4 rounded-lg border border-white/10 bg-[#101016]/94 p-4" aria-live="polite" key={activeIndex}>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-[9px] font-bold uppercase text-white/32">Étape {activeIndex + 1} sur {steps.length}</p>
+                <h3 className="mt-1 text-xl font-semibold text-white">{activeStep.title}</h3>
+              </div>
+              <span className="font-editorial text-3xl italic text-white/24">{activeStep.number}</span>
+            </div>
+            <p className="mt-2 text-xs leading-5 text-white/54">{activeStep.text}</p>
+            <div className="mt-3 overflow-hidden rounded-md border border-white/8 bg-[#09090e]">
+              <ProcessVisual active={activeIndex} compact />
+            </div>
+          </article>
+        </div>
+
+        <div className="hidden max-w-3xl md:block">
           <p className="section-label">Notre méthode</p>
           <h2 className="section-heading mt-5">
             De votre idée à un site prêt à <span className="font-editorial font-normal italic text-white/62">performer.</span>
           </h2>
         </div>
 
-        <ol className="relative grid gap-4 before:absolute before:bottom-8 before:left-6 before:top-8 before:w-px before:bg-white/10 md:grid-cols-2 md:before:hidden">
-          {steps.map((step) => {
-            const Icon = step.icon;
-            const isLaunchStep = step.number === "06";
-            return (
-              <li
-                key={step.number}
-                className={`premium-card relative flex min-h-48 flex-col p-6 ${
-                  isLaunchStep ? "border-success/24 bg-success/[0.035] md:col-span-2" : ""
-                }`}
-              >
-                <div className="flex items-center justify-between gap-4">
-                  <span className={`relative z-10 flex h-12 w-12 items-center justify-center rounded-full border bg-[#111118] ${isLaunchStep ? "border-success/28 text-success" : "border-white/12 text-[#9f96ff]"}`}>
-                    <Icon size={19} strokeWidth={1.7} />
-                  </span>
-                  <span className="font-editorial text-2xl italic text-white/28">{step.number}</span>
-                </div>
-                <h3 className="mt-6 text-2xl font-semibold text-white">{step.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-white/56">{step.text}</p>
+        <div className="hidden gap-6 md:grid md:grid-cols-[0.88fr_1.12fr] md:items-center md:gap-10">
+          <div>
+            <nav aria-label="Étapes de la méthode" className="overflow-hidden rounded-lg border border-white/10 bg-white/[0.02]">
+              <ol className="grid grid-cols-3">
+                {steps.map((step, index) => {
+                  const isActive = index === activeIndex;
+                  return (
+                    <li
+                      key={step.number}
+                      className={`${index % 3 !== 2 ? "border-r" : ""} ${index < 3 ? "border-b" : ""} border-white/10`}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => navigateToStep(index)}
+                        aria-current={isActive ? "step" : undefined}
+                        aria-controls="tablet-process-step"
+                        className={`flex min-h-14 w-full flex-col items-center justify-center gap-1 px-1.5 text-center transition-colors ${
+                          isActive ? "bg-white/[0.09] text-white" : "text-white/42"
+                        }`}
+                      >
+                        <span className={`text-[8px] font-bold ${isActive ? "text-[#a9a1ff]" : "text-white/24"}`}>
+                          {step.number}
+                        </span>
+                        <span className="text-[10px] font-semibold sm:text-[11px]">{step.title}</span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ol>
+            </nav>
 
-                {isLaunchStep && (
-                  <div className="mt-6 border-t border-success/18 pt-5">
-                    <div className="flex items-center justify-between gap-4 text-xs font-semibold">
-                      <span className="text-white/72">Prêt pour la mise en ligne</span>
-                      <span className="tabular-nums text-success">100%</span>
-                    </div>
-                    <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/8">
-                      <div className="h-full w-full rounded-full bg-success" />
-                    </div>
-                    <ul className="mt-5 grid gap-3 sm:grid-cols-5" aria-label="Vérifications avant mise en ligne">
-                      {launchStages.map((stage) => (
-                        <li key={stage} className="flex items-start gap-2 text-xs leading-5 text-white/58">
-                          <Check size={14} className="mt-0.5 shrink-0 text-success" />
-                          <span>{stage}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </li>
-            );
-          })}
-        </ol>
+            <article
+              id="tablet-process-step"
+              className={`panel-in premium-card mt-4 min-h-40 p-5 ${activeIndex === steps.length - 1 ? "border-success/24 bg-success/[0.035]" : ""}`}
+              aria-live="polite"
+              key={activeIndex}
+            >
+              <div className="flex items-center justify-between gap-4">
+                <span className="font-editorial text-3xl italic text-[#9f96ff]">{activeStep.number}</span>
+                <span className="text-xs text-white/28">{activeIndex + 1} / {steps.length}</span>
+              </div>
+              <h3 className="mt-3 text-2xl font-semibold text-white">{activeStep.title}</h3>
+              <p className="mt-3 text-sm leading-6 text-white/58">{activeStep.text}</p>
+
+              {activeIndex === steps.length - 1 && (
+                <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-2 border-t border-success/18 pt-4" aria-label="Vérifications avant mise en ligne">
+                  {launchStages.map((stage) => (
+                    <li key={stage} className="flex items-center gap-1.5 text-[10px] text-white/52">
+                      <Check size={12} className="shrink-0 text-success" />
+                      {stage}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </article>
+          </div>
+
+          <ProcessVisual active={activeIndex} />
+        </div>
       </div>
     </section>
   );

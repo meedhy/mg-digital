@@ -239,12 +239,14 @@ function getPreviewSrc(src: string) {
 
 function ProjectCard({
   project,
-  featured = false,
+  compact = false,
+  className = "",
   buttonRef,
   onOpen,
 }: {
   project: Project;
-  featured?: boolean;
+  compact?: boolean;
+  className?: string;
   buttonRef: (element: HTMLButtonElement | null) => void;
   onOpen: () => void;
 }) {
@@ -266,9 +268,7 @@ function ProjectCard({
 
   return (
     <article
-      className={`group relative overflow-hidden rounded-lg border border-black/10 bg-white/36 transition duration-300 hover:-translate-y-1 hover:border-black/22 hover:shadow-[0_24px_70px_rgba(20,20,24,0.12)] ${
-        featured ? "md:col-span-2 md:grid md:grid-cols-[1.15fr_0.85fr] lg:col-span-1 lg:block" : ""
-      }`}
+      className={`group relative min-h-0 overflow-hidden rounded-[4px] bg-[#17171c] text-white ${className}`}
       onMouseEnter={() => {
         if (
           window.innerWidth < 768 ||
@@ -285,66 +285,51 @@ function ProjectCard({
         setPreviewIndex(0);
       }}
     >
-      <div
-        className={`relative aspect-[16/10] overflow-hidden border-b border-black/8 bg-[#e7e6e2] ${
-          featured
-            ? "md:aspect-auto md:min-h-[270px] md:border-b-0 md:border-r lg:aspect-[16/10] lg:min-h-0 lg:border-b lg:border-r-0"
-            : ""
-        }`}
-      >
+      <div className="absolute inset-0 overflow-hidden bg-[#17171c]">
         <Image
           key={previewSrc}
           src={previewSrc}
           alt={preview.alt}
           fill
           unoptimized
-          sizes="(min-width: 1024px) 570px, (min-width: 768px) 48vw, calc(100vw - 40px)"
-          className="project-preview-in object-cover transition-transform duration-700 group-hover:scale-[1.015]"
+          sizes="(min-width: 1024px) 58vw, (min-width: 768px) 50vw, 100vw"
+          className="project-preview-in object-cover transition-transform duration-700 group-hover:scale-[1.025]"
           style={{ objectPosition: preview.previewPosition ?? "center" }}
         />
 
-        <div className="absolute inset-x-3 top-3 z-10 flex items-center justify-between gap-4 text-[10px] font-bold uppercase">
-          <span className="rounded-full border border-black/8 bg-white/92 px-2.5 py-1.5 text-black/56 shadow-sm">
-            Projet {project.number}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/8 to-black/22" />
+
+        <div className="absolute inset-x-3 top-3 z-10 flex items-center justify-between gap-4 text-[9px] font-bold uppercase text-white/72 md:inset-x-4 md:top-4">
+          <span>
+            {project.number}
           </span>
-          <span className="rounded-full border border-black/8 bg-white/92 px-2.5 py-1.5 tabular-nums text-black/56 shadow-sm">
+          <span className="tabular-nums">
             {String(previewIndex + 1).padStart(2, "0")} / {String(project.images.length).padStart(2, "0")}
           </span>
         </div>
 
-        <div className="absolute inset-x-3 bottom-3 z-10 flex gap-1" aria-hidden="true">
-          {project.images.map((image, index) => (
-            <span
-              key={image.src}
-              className={`h-0.5 min-w-0 flex-1 rounded-full transition-colors ${
-                index === previewIndex ? "bg-white" : "bg-black/22"
-              }`}
-            />
-          ))}
+        <div className="absolute inset-x-3 top-8 z-10 h-px overflow-hidden bg-white/24 md:inset-x-4 md:top-10" aria-hidden="true">
+          <span
+            className="block h-full bg-white transition-[width] duration-300"
+            style={{ width: `${((previewIndex + 1) / project.images.length) * 100}%` }}
+          />
         </div>
       </div>
 
-      <div
-        className={`flex min-h-36 items-start justify-between gap-6 p-5 md:p-6 ${
-          featured ? "md:self-center lg:self-auto" : ""
-        }`}
-      >
-        <div className="min-w-0">
-          <h3 className="font-editorial text-3xl leading-none text-[#101014] md:text-4xl">{project.name}</h3>
-          <p className="mt-3 text-sm font-semibold leading-6 text-black/62">{project.subtitle}</p>
-          <div className="mt-4 flex flex-wrap gap-x-3 gap-y-1.5">
-            {project.tags.slice(0, 3).map((tag) => (
-              <span key={tag} className="text-[11px] font-semibold text-black/38">
-                {tag}
-              </span>
-            ))}
-          </div>
+      <div className={`absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-3 ${compact ? "p-3" : "p-5 md:p-7"}`}>
+        <div className="min-w-0 text-white">
+          <h3 className={`font-semibold leading-none ${compact ? "text-base sm:text-xl md:text-2xl" : "text-3xl md:text-5xl"}`}>
+            {project.name}
+          </h3>
+          <p className={`mt-2 truncate font-medium text-white/68 ${compact ? "text-[9px] sm:text-xs" : "text-xs md:text-sm"}`}>
+            {project.subtitle}
+          </p>
         </div>
         <span
           aria-hidden="true"
-          className="grid size-10 shrink-0 place-items-center rounded-full border border-black/10 text-black/54 transition duration-300 group-hover:border-black/22 group-hover:text-black"
+          className={`grid shrink-0 place-items-center rounded-full border border-white/28 bg-black/18 text-white transition duration-300 group-hover:bg-white group-hover:text-black ${compact ? "size-8" : "size-10"}`}
         >
-          <ArrowUpRight size={18} strokeWidth={1.8} />
+          <ArrowUpRight size={compact ? 15 : 18} strokeWidth={1.8} />
         </span>
       </div>
 
@@ -592,21 +577,18 @@ export default function ProjectShowcase() {
       : null;
 
   return (
-    <div className="mt-14 border-t border-black/14 pt-8 md:mt-16 md:pt-10">
-      <div className="flex items-end justify-between gap-6">
-        <div>
-          <p className="text-[10px] font-bold uppercase text-black/38">Projets sélectionnés</p>
-          <p className="mt-2 text-sm text-black/44">Trois univers, du produit éditorial à l’identité de marque.</p>
-        </div>
-        <span className="font-editorial text-2xl italic text-[#5f54d8]">01—03</span>
-      </div>
-
-      <div className="mt-7 grid gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
+    <div className="mt-7 md:mt-10">
+      <div className="grid grid-cols-2 gap-1.5 md:gap-2 lg:auto-rows-[240px] lg:grid-cols-12">
         {projects.map((project, index) => (
           <ProjectCard
             key={project.name}
             project={project}
-            featured={index === projects.length - 1}
+            compact={index !== 0}
+            className={
+              index === 0
+                ? "col-span-2 aspect-square md:aspect-[16/10] lg:col-span-7 lg:row-span-2 lg:aspect-auto"
+                : "aspect-square lg:col-span-5 lg:aspect-auto"
+            }
             buttonRef={(element) => {
               cardRefs.current[index] = element;
             }}

@@ -23,8 +23,12 @@
 html {
   background: var(--background);
   scroll-behavior: auto;
-  scroll-padding-top: 96px;
+  scroll-padding-top: 124px;
   scrollbar-gutter: stable;
+}
+
+section[id] {
+  scroll-margin-top: 124px;
 }
 
 body {
@@ -70,7 +74,7 @@ button:disabled {
 
 .page-shell {
   margin-inline: auto;
-  width: min(100% - 40px, 1180px);
+  width: min(calc(100% - 40px), 1180px);
 }
 
 .section-label {
@@ -84,7 +88,7 @@ button:disabled {
 
 .section-heading {
   max-width: 900px;
-  font-size: 2.2rem;
+  font-size: 1.9rem;
   font-weight: 600;
   letter-spacing: 0;
   line-height: 0.98;
@@ -275,11 +279,21 @@ select:focus-visible {
 
 @media (min-width: 768px) {
   .page-shell {
-    width: min(100% - 64px, 1180px);
+    width: min(calc(100% - 64px), 1180px);
   }
 
   .section-heading {
     font-size: 3.15rem;
+  }
+}
+
+@media (min-width: 840px) {
+  html {
+    scroll-padding-top: 88px;
+  }
+
+  section[id] {
+    scroll-margin-top: 88px;
   }
 }
 
@@ -347,5 +361,15 @@ select:focus-visible {
   .button-accent,
   .button-secondary {
     width: 100%;
+  }
+}
+
+@media (max-width: 839px) {
+  html {
+    scroll-padding-top: 116px;
+  }
+
+  .glass-nav.mobile-nav-surface {
+    background: rgba(10, 10, 14, 0.96);
   }
 }

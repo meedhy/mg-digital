@@ -39,7 +39,7 @@ export default function OfferBridge() {
     <section
       ref={sectionRef}
       aria-labelledby="offer-bridge-title"
-      className="atmosphere noise relative flex min-h-[64svh] items-center overflow-hidden border-t border-white/8 py-20 md:min-h-[68svh]"
+      className="atmosphere noise relative flex min-h-[48svh] items-center overflow-hidden border-t border-white/8 py-14 md:min-h-[68svh] md:py-20"
     >
       <div className="interface-grid absolute inset-0 opacity-18" />
       <div
@@ -57,11 +57,11 @@ export default function OfferBridge() {
         <p className="section-label">Réalisations</p>
         <h2
           id="offer-bridge-title"
-          className="mx-auto mt-6 max-w-[900px] text-[2.2rem] font-semibold leading-[1.02] text-white md:text-[3.1rem] lg:text-[3.65rem]"
+          className="mx-auto mt-5 max-w-[900px] text-[1.9rem] font-semibold leading-[1.02] text-white md:mt-6 md:text-[3.1rem] lg:text-[3.65rem]"
         >
           Avant de parler budget, regardez <span className="font-editorial font-normal italic text-gradient">le travail.</span>
         </h2>
-        <p className="mx-auto mt-7 max-w-xl text-base leading-7 text-white/58 md:text-lg">
+        <p className="mx-auto mt-5 max-w-xl text-sm leading-6 text-white/58 md:mt-7 md:text-lg md:leading-7">
           Trois projets montrent ma manière de penser une expérience, de la stratégie aux détails.
         </p>
         <TrackedLink

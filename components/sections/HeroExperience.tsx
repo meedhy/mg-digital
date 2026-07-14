@@ -67,33 +67,28 @@ export default function HeroExperience() {
     <section
       ref={sectionRef}
       id="accueil"
-      className="hero-sequence relative min-h-[100svh] bg-canvas lg:min-h-[185svh]"
+      className="hero-sequence relative min-h-[100svh] bg-canvas lg:min-h-[150svh]"
     >
       <div className="hero-sticky sticky top-0 h-[100svh] overflow-hidden">
         <div ref={backgroundRef} className="atmosphere noise absolute -inset-8 transform-gpu">
           <div className="interface-grid absolute inset-0 opacity-40" />
         </div>
 
-        <div className="page-shell relative z-20 flex h-full flex-col justify-start pb-24 pt-28 md:justify-center md:pb-16 md:pt-32">
+        <div className="page-shell relative z-20 flex h-full flex-col justify-start pb-[45vh] pt-36 md:justify-center md:pb-16 min-[840px]:pt-32">
           <div className="relative z-20 max-w-[1100px]">
-            <p className="section-label mb-6 text-white/58">
-              Création de sites internet · Kinshasa et à distance
-            </p>
             <h1
               ref={titleRef}
-              className="max-w-[980px] origin-left text-[2.5rem] font-semibold leading-[0.98] text-white md:text-[3.5rem] lg:text-[4.75rem] xl:text-[5.5rem]"
+              className="max-w-[980px] origin-left text-[2.5rem] font-semibold leading-[0.96] text-white sm:text-[2.8rem] md:text-[3.8rem] lg:text-[5rem] xl:text-[5.7rem]"
             >
-              Des sites qui transforment votre présence{" "}
-              <span className="font-editorial text-gradient inline-block font-normal italic">en opportunités.</span>
+              Votre site internet <span className="font-editorial text-gradient inline-block font-normal italic">commence ici.</span>
             </h1>
           </div>
 
-          <div ref={copyRef} className="relative z-30 mt-7 max-w-[680px] md:mt-9">
-            <p className="text-base font-light leading-7 text-white/68 md:text-lg md:leading-8">
-              MG Digital conçoit des sites rapides, premium et pensés pour présenter votre activité,
-              générer des demandes, vendre ou digitaliser un service.
+          <div ref={copyRef} className="relative z-30 mt-5 max-w-[620px] md:mt-9">
+            <p className="max-w-[520px] text-sm font-light leading-6 text-white/64 sm:text-base sm:leading-7 md:text-lg md:leading-8">
+              Un site clair, rapide et pensé pour faire avancer votre activité.
             </p>
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-5 flex flex-col gap-3 sm:mt-7 sm:flex-row">
               <TrackedLink
                 href={whatsappHref()}
                 target="_blank"
@@ -103,24 +98,26 @@ export default function HeroExperience() {
                 eventPayload={{ source: "hero" }}
                 className="button-primary"
               >
-                Parler de mon projet
+                Démarrer mon site
                 <ArrowUpRight className="button-arrow" size={17} />
               </TrackedLink>
-              <TrackedLink
-                href="#realisations"
-                eventName="hero_portfolio_click"
-                eventPayload={{ source: "hero" }}
-                className="button-secondary"
-              >
-                Voir les réalisations
-                <ArrowDown className="button-arrow" size={16} />
-              </TrackedLink>
+              <span className="hidden sm:contents">
+                <TrackedLink
+                  href="#realisations"
+                  eventName="hero_portfolio_click"
+                  eventPayload={{ source: "hero" }}
+                  className="button-secondary"
+                >
+                  Voir les réalisations
+                  <ArrowDown className="button-arrow" size={16} />
+                </TrackedLink>
+              </span>
             </div>
-            <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2">
+            <div className="mt-5 grid grid-cols-2 gap-x-4 gap-y-2 sm:mt-7 sm:flex sm:flex-wrap sm:gap-x-5">
               {reassurance.map((item) => (
                 <span key={item} className="inline-flex items-center gap-2 text-xs font-medium text-white/52">
                   <Check size={13} className="text-success" />
-                  {item}
+                  <span>{item}</span>
                 </span>
               ))}
             </div>
@@ -130,7 +127,7 @@ export default function HeroExperience() {
         <div
           ref={interfaceRef}
           aria-hidden="true"
-          className="pointer-events-none absolute bottom-[-10vh] right-[-48vw] z-10 aspect-[16/10] w-[128vw] max-w-[980px] origin-center transform-gpu opacity-45 sm:right-[-28vw] sm:w-[100vw] md:bottom-[-5vh] md:right-[-8vw] md:w-[72vw] md:opacity-100 lg:right-0 lg:w-[62vw] xl:right-[2vw] xl:w-[54vw]"
+          className="pointer-events-none absolute bottom-[-3vh] right-[-72vw] z-10 aspect-[16/10] w-[170vw] max-w-[980px] origin-center transform-gpu opacity-80 sm:right-[-28vw] sm:w-[100vw] md:bottom-[-5vh] md:right-[-8vw] md:w-[72vw] md:opacity-100 lg:right-0 lg:w-[62vw] xl:right-[2vw] xl:w-[54vw]"
           style={{ perspective: "1200px" }}
         >
           <div className="absolute inset-x-0 bottom-0 top-6 overflow-hidden rounded-lg border border-white/14 bg-[#0d0d14]/88 shadow-[0_40px_140px_rgba(0,0,0,0.7)] backdrop-blur-xl">
@@ -175,7 +172,7 @@ export default function HeroExperience() {
             </div>
           </div>
 
-          <div className="absolute -left-5 bottom-[8%] hidden aspect-[9/19] w-[20%] max-w-[190px] overflow-hidden rounded-[24px] border border-white/18 bg-[#101018] p-2 shadow-2xl sm:block">
+          <div className="absolute -left-5 bottom-[8%] block aspect-[9/19] w-[20%] max-w-[190px] overflow-hidden rounded-[24px] border border-white/18 bg-[#101018] p-2 shadow-2xl">
             <div className="h-full rounded-[18px] border border-white/8 bg-[#09090d] p-3">
               <div className="mx-auto h-1.5 w-10 rounded-full bg-white/14" />
               <div className="mt-7 h-2 w-14 rounded-full bg-accent" />

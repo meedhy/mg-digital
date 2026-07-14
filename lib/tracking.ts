@@ -7,6 +7,7 @@ export type TrackingEvent =
   | "objective_select"
   | "objective_navigation_click"
   | "offer_view"
+  | "offer_navigation_click"
   | "offer_cta_click"
   | "process_step_navigation_click"
   | "technology_select"

@@ -8,12 +8,12 @@ const navigation = [
   ["Réalisations", "#realisations"],
   ["Formules", "#offres"],
   ["Méthode", "#methode"],
-  ["Lancer votre projet", "#contact"],
+  ["Votre projet", "#contact"],
 ];
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/8 bg-[#030304] pb-8 pt-16 text-white">
+    <footer className="border-t border-white/8 bg-[#030304] pb-8 pt-14 text-white md:pt-16">
       <div className="page-shell grid gap-12 md:grid-cols-[1.2fr_0.8fr_0.8fr]">
         <div>
           <BrandMark />
