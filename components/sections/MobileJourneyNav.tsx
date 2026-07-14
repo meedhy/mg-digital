@@ -8,10 +8,10 @@ type JourneySection = {
 };
 
 const journeySections: JourneySection[] = [
-  { href: "#services", label: "Services" },
   { href: "#realisations", label: "Réalisations" },
-  { href: "#offres", label: "Formules" },
+  { href: "#services", label: "Services" },
   { href: "#methode", label: "Méthode" },
+  { href: "#offres", label: "Formules" },
   { href: "#contact", label: "Votre projet" },
 ];
 

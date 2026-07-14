@@ -10,8 +10,8 @@ import { whatsappHref } from "@/lib/contact";
 const links = [
   { href: "#realisations", label: "Réalisations" },
   { href: "#services", label: "Services" },
-  { href: "#offres", label: "Formules" },
   { href: "#methode", label: "Méthode" },
+  { href: "#offres", label: "Formules" },
   { href: "#contact", label: "Votre projet" },
 ];
 

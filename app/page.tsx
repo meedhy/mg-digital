@@ -1,4 +1,3 @@
-import BusinessObjectives from "@/components/sections/BusinessObjectives";
 import ExpertiseSection from "@/components/sections/ExpertiseSection";
 import FloatingNavbar from "@/components/sections/FloatingNavbar";
 import Footer from "@/components/sections/Footer";
@@ -17,9 +16,8 @@ export default function Home() {
         <HeroExperience />
         <ExpertiseSection />
         <ServicesOverview />
-        <BusinessObjectives />
-        <OffersExperience />
         <ProcessExperience />
+        <OffersExperience />
         <LeadQualification />
       </main>
       <Footer />

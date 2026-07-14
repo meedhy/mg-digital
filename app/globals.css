@@ -292,6 +292,25 @@ select:focus-visible {
   }
 }
 
+.realisations-overlap {
+  margin-top: -18rem !important;
+  background: linear-gradient(to bottom, transparent 0, transparent 18rem, #f6f6f4 18rem, #f6f6f4 100%) !important;
+}
+
+@media (max-width: 767px) and (min-height: 850px) {
+  .realisations-overlap {
+    margin-top: -10rem !important;
+    background: linear-gradient(to bottom, transparent 0, transparent 10rem, #f6f6f4 10rem, #f6f6f4 100%) !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .realisations-overlap {
+    margin-top: 0 !important;
+    background: #f6f6f4 !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .project-preview-in {
     animation: none;

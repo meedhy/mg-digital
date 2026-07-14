@@ -17,7 +17,7 @@ export default function ExpertiseSection() {
   return (
     <section
       id="realisations"
-      className="relative z-30 -mt-72 border-b border-black/8 bg-[linear-gradient(to_bottom,transparent_0,transparent_18rem,#f6f6f4_18rem,#f6f6f4_100%)] pb-16 pt-0 text-[#101014] md:mt-0 md:border-y md:bg-[#f6f6f4] md:py-20 lg:py-24"
+      className="realisations-overlap relative z-30 border-b border-black/8 pb-16 pt-0 text-[#101014] md:border-y md:py-20 lg:py-24"
     >
       <div className="page-shell">
         <div

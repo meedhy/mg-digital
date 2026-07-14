@@ -8,8 +8,8 @@ import { whatsappHref } from "@/lib/contact";
 const navigation = [
   ["Réalisations", "#realisations"],
   ["Services", "#services"],
-  ["Formules", "#offres"],
   ["Méthode", "#methode"],
+  ["Formules", "#offres"],
   ["Votre projet", "#contact"],
 ];
 
