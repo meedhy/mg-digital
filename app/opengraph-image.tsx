@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "MG Digital — Création de sites internet à Kinshasa";
+export const alt = "MG Digital — Création de sites internet sur mesure";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -28,7 +28,7 @@ export default function OpenGraphImage() {
             Des sites qui transforment votre présence en opportunités.
           </div>
           <div style={{ marginTop: 42, fontSize: 24, color: "rgba(245,245,247,.62)" }}>
-            Création de sites internet · Kinshasa et à distance
+            Création de sites internet · UX/UI · Développement web
           </div>
         </div>
       </div>

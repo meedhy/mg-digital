@@ -11,7 +11,7 @@ const journeySections: JourneySection[] = [
   { href: "#realisations", label: "Réalisations" },
   { href: "#services", label: "Services" },
   { href: "#methode", label: "Méthode" },
-  { href: "#offres", label: "Formules" },
+  { href: "#offres", label: "Offres" },
   { href: "#contact", label: "Votre projet" },
 ];
 

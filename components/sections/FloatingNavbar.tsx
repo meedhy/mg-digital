@@ -11,7 +11,7 @@ const links = [
   { href: "#realisations", label: "Réalisations" },
   { href: "#services", label: "Services" },
   { href: "#methode", label: "Méthode" },
-  { href: "#offres", label: "Formules" },
+  { href: "#offres", label: "Offres" },
   { href: "#contact", label: "Votre projet" },
 ];
 
@@ -102,7 +102,7 @@ export default function FloatingNavbar() {
 
   return (
     <>
-      <header className="pointer-events-none fixed left-1/2 top-2 z-50 w-[min(calc(100vw-16px),1180px)] -translate-x-1/2 min-[840px]:top-5 min-[840px]:w-[min(94vw,1180px)]">
+      <header className="pointer-events-none fixed left-1/2 top-[max(0.5rem,env(safe-area-inset-top))] z-50 w-[min(calc(100vw-16px),1180px)] -translate-x-1/2 min-[840px]:top-5 min-[840px]:w-[min(94vw,1180px)]">
         <nav
           aria-label="Navigation principale"
           className={`glass-nav mobile-nav-surface pointer-events-auto flex items-center gap-2 overflow-hidden rounded-full transition-all duration-300 ease-premium min-[840px]:justify-between min-[840px]:gap-0 ${

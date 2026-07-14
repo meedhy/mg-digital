@@ -9,7 +9,7 @@ const navigation = [
   ["Réalisations", "#realisations"],
   ["Services", "#services"],
   ["Méthode", "#methode"],
-  ["Formules", "#offres"],
+  ["Offres", "#offres"],
   ["Votre projet", "#contact"],
 ];
 
@@ -20,9 +20,9 @@ export default function Footer() {
         <div>
           <BrandMark />
           <p className="mt-5 max-w-sm text-sm leading-7 text-white/42">
-            Création de sites internet à Kinshasa et à distance pour entrepreneurs, indépendants et PME.
+            Création de sites internet sur mesure pour entrepreneurs, indépendants et PME.
           </p>
-          <p className="mt-4 text-xs font-semibold uppercase text-white/28">Kinshasa · RDC · Diaspora · À distance</p>
+          <p className="mt-4 text-xs font-semibold uppercase text-white/28">Disponible pour vos projets, où que vous soyez</p>
         </div>
 
         <div>

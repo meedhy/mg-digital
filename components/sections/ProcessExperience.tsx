@@ -437,17 +437,17 @@ export default function ProcessExperience() {
           <header className="pb-2">
             <p className="text-[10px] font-bold uppercase text-white/38">Notre méthode</p>
             <h2 className="mt-3 text-[1.75rem] font-semibold leading-[1.02] text-white">
-              Comment votre site <span className="font-editorial font-normal italic text-white/58">prend forme.</span>
+              Comment votre site <span className="block font-editorial font-normal italic text-white/58">prend forme.</span>
             </h2>
           </header>
 
-          <div ref={mobileTimelineRef} className="relative mt-5 grid grid-cols-[38px_minmax(0,1fr)] gap-3">
+          <div ref={mobileTimelineRef} className="relative mt-2 grid grid-cols-[38px_minmax(0,1fr)] gap-3">
             <div className="relative">
-              <span aria-hidden="true" className="absolute bottom-[19svh] left-[18px] top-[19svh] w-px bg-white/10" />
+              <span aria-hidden="true" className="absolute bottom-[19svh] left-[18px] top-[34px] w-px bg-white/10" />
               <span
                 ref={mobileProgressRef}
                 aria-hidden="true"
-                className="absolute bottom-[19svh] left-[18px] top-[19svh] w-px origin-top scale-y-0 bg-gradient-to-b from-accent via-[#8b8cff] to-accent-secondary will-change-transform"
+                className="absolute bottom-[19svh] left-[18px] top-[34px] w-px origin-top scale-y-0 bg-gradient-to-b from-accent via-[#8b8cff] to-accent-secondary will-change-transform"
               />
               <ol aria-label="Frise des étapes de la méthode">
                 {steps.map((step, index) => {
@@ -457,7 +457,7 @@ export default function ProcessExperience() {
                     <li
                       key={step.number}
                       ref={(node) => { mobileStepRefs.current[index] = node; }}
-                      className="flex h-[38svh] min-h-[250px] items-center justify-center"
+                      className={index === 0 ? "flex h-auto min-h-0 items-start justify-center pt-4" : "flex h-[38svh] min-h-[250px] items-center justify-center"}
                     >
                       <button
                         type="button"
@@ -481,7 +481,7 @@ export default function ProcessExperience() {
               </ol>
             </div>
 
-            <div className="sticky top-24 self-start pt-[max(1rem,8svh)]">
+            <div className="sticky top-24 self-start pt-4">
               <article
                 id="mobile-process-step"
                 className={`overflow-hidden border-y py-4 transition-colors duration-500 ${

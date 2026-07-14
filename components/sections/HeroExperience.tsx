@@ -193,7 +193,7 @@ export default function HeroExperience() {
         >
           <span>Objectifs</span>
           <span className="h-px w-8 bg-white/16" />
-          <span>Formules</span>
+          <span>Offres</span>
           <span className="h-px w-8 bg-white/16" />
           <span>Mise en ligne</span>
         </div>

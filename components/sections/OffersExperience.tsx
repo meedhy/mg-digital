@@ -211,7 +211,7 @@ export default function OffersExperience() {
       <div className="page-shell relative lg:grid lg:grid-cols-[minmax(260px,0.58fr)_minmax(0,1.42fr)] lg:items-start lg:gap-12 xl:gap-20">
         <div className="lg:sticky lg:top-28">
           <div className="md:hidden">
-            <p className="text-[0.72rem] font-bold uppercase leading-none text-black/42">Formules</p>
+            <p className="text-[0.72rem] font-bold uppercase leading-none text-black/42">Offres</p>
             <h2 className="mt-4 text-[1.75rem] font-semibold leading-[1.02] text-black/88">
               Choisissez votre <span className="font-editorial font-normal italic text-black/46">accompagnement.</span>
             </h2>
@@ -221,7 +221,7 @@ export default function OffersExperience() {
           </div>
 
           <SectionHeading
-            label="Formules"
+            label="Offres"
             text="Deux solutions complètes, selon que votre site existe déjà ou non. Le périmètre est confirmé après un échange."
             className="hidden md:block"
             light
@@ -283,7 +283,7 @@ export default function OffersExperience() {
           </p>
           <button type="button" onClick={openCustomProject} className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full border border-black/14 px-6 text-sm font-semibold text-black/72 transition-colors hover:border-black/30 hover:bg-black/[0.035]">
             <MessageCircle size={17} aria-hidden="true" />
-            Faire une demande
+            Faire une demande sur mesure
           </button>
         </div>
         </div>

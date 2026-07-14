@@ -126,7 +126,8 @@ function LeadQualificationForm({ intent }: { intent: ProjectIntent }) {
   }));
   const [stepError, setStepError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "preview" | "submitting" | "success" | "error">("idle");
+  const [previewMessage, setPreviewMessage] = useState("");
   const [fallbackHref, setFallbackHref] = useState(whatsappHref());
   const startedRef = useRef(false);
   const formRef = useRef<HTMLFormElement>(null);
@@ -213,12 +214,26 @@ function LeadQualificationForm({ intent }: { intent: ProjectIntent }) {
       return;
     }
 
-    const href = whatsappHref(buildWhatsappMessage(values, intent.offer));
-    setFallbackHref(href);
-    setStatus("submitting");
+    setPreviewMessage(buildWhatsappMessage(values, intent.offer));
+    setStatus("preview");
     setStepError("");
 
     trackEvent("lead_form_step_complete", { step: 3, value: "coordonnées" });
+    trackEvent("lead_form_step_complete", {
+      step: 3,
+      value: "aperçu du message",
+      projectType: values.projectType,
+      objective: values.objective,
+      budget: values.budget,
+      offer: intent.offer || undefined,
+    });
+  }
+
+  function sendPreview() {
+    if (!previewMessage.trim() || status === "submitting") return;
+    const href = whatsappHref(previewMessage);
+    setFallbackHref(href);
+    setStatus("submitting");
     trackEvent("lead_form_submit", {
       projectType: values.projectType,
       objective: values.objective,
@@ -309,6 +324,40 @@ function LeadQualificationForm({ intent }: { intent: ProjectIntent }) {
                 Ouvrir WhatsApp
                 <MessageCircle size={17} />
               </a>
+            </div>
+          ) : status === "preview" || status === "submitting" ? (
+            <div className="flex min-h-[430px] flex-col pt-7 md:pt-9">
+              <p className="text-xs font-bold uppercase text-black/36">Votre message</p>
+              <h3 className="mt-3 text-2xl font-semibold text-black/88 md:text-3xl">Vérifiez avant l’envoi.</h3>
+              <p className="mt-2 max-w-xl text-sm leading-6 text-black/48">Vous pouvez modifier librement le message préparé.</p>
+              <label className="mt-5 grid flex-1 gap-2 text-sm font-semibold text-black/68">
+                Aperçu modifiable
+                <textarea
+                  value={previewMessage}
+                  onChange={(event) => setPreviewMessage(event.target.value)}
+                  rows={12}
+                  className="min-h-64 resize-y rounded-lg border border-black/10 bg-black/[0.025] px-4 py-4 font-normal leading-6 text-black/76 outline-none transition-colors focus:border-accent/70"
+                />
+              </label>
+              <div className="mt-5 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <button
+                  type="button"
+                  onClick={() => setStatus("idle")}
+                  className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-black/14 px-5 text-sm font-semibold text-black/68 transition-colors hover:border-black/30 hover:bg-black/[0.035] sm:w-auto"
+                >
+                  <ArrowLeft size={16} aria-hidden="true" />
+                  Modifier mes réponses
+                </button>
+                <button
+                  type="button"
+                  onClick={sendPreview}
+                  disabled={status === "submitting" || !previewMessage.trim()}
+                  className="button-accent disabled:cursor-not-allowed disabled:opacity-55"
+                >
+                  {status === "submitting" ? <LoaderCircle className="animate-spin" size={17} /> : <MessageCircle size={17} />}
+                  {status === "submitting" ? "Ouverture…" : "Envoyer sur WhatsApp"}
+                </button>
+              </div>
             </div>
           ) : (
             <div className="mt-6 flex min-h-[380px] flex-col md:mt-8 md:min-h-[420px]">
@@ -428,18 +477,9 @@ function LeadQualificationForm({ intent }: { intent: ProjectIntent }) {
                     <ArrowRight className="button-arrow" size={16} />
                   </button>
                 ) : (
-                  <button type="submit" disabled={status === "submitting"} className="button-accent disabled:cursor-not-allowed disabled:opacity-55">
-                    {status === "submitting" ? (
-                      <>
-                        <LoaderCircle className="animate-spin" size={17} />
-                        Préparation…
-                      </>
-                    ) : (
-                      <>
-                        Préparer mon message WhatsApp
-                        <ArrowRight className="button-arrow" size={16} />
-                      </>
-                    )}
+                  <button type="submit" className="button-accent">
+                    Prévisualiser mon message
+                    <ArrowRight className="button-arrow" size={16} />
                   </button>
                 )}
               </div>

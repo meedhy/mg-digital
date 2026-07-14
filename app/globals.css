@@ -293,15 +293,8 @@ select:focus-visible {
 }
 
 .realisations-overlap {
-  margin-top: -18rem !important;
-  background: linear-gradient(to bottom, transparent 0, transparent 18rem, #f6f6f4 18rem, #f6f6f4 100%) !important;
-}
-
-@media (max-width: 767px) and (min-height: 850px) {
-  .realisations-overlap {
-    margin-top: -10rem !important;
-    background: linear-gradient(to bottom, transparent 0, transparent 10rem, #f6f6f4 10rem, #f6f6f4 100%) !important;
-  }
+  margin-top: -3rem !important;
+  background: linear-gradient(to bottom, transparent 0, transparent 3rem, #f6f6f4 3rem, #f6f6f4 100%) !important;
 }
 
 @media (min-width: 768px) {
@@ -314,6 +307,24 @@ select:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .project-preview-in {
     animation: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-sequence {
+    min-height: 0 !important;
+  }
+
+  .hero-sticky {
+    position: relative !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+  select,
+  textarea {
+    font-size: 16px !important;
   }
 }
 
