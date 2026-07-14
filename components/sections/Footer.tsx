@@ -1,33 +1,84 @@
-function LinkedInIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
-      <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.13 1.44-2.13 2.94v5.66H9.37V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.56V9h3.56v11.45Z" />
-    </svg>
-  );
-}
+import { ExternalLink } from "lucide-react";
+import BrandMark from "@/components/ui/BrandMark";
+import TrackedLink from "@/components/ui/TrackedLink";
+import { whatsappHref } from "@/lib/contact";
+
+const navigation = [
+  ["Services", "#services"],
+  ["Réalisations", "#realisations"],
+  ["Formules", "#offres"],
+  ["Méthode", "#methode"],
+  ["Lancer votre projet", "#contact"],
+];
 
 export default function Footer() {
   return (
-    <footer
-      className="flex flex-col items-center justify-between gap-4 border-t border-white/10 px-5 sm:px-8 lg:px-12 py-7 md:flex-row"
-      style={{ backgroundColor: "#080D5E" }}
-    >
-      <div className="font-body text-sm text-white/40">
-        Medhi Ghali <span className="text-white/20">· MG Digital</span>
+    <footer className="border-t border-white/8 bg-[#030304] pb-8 pt-16 text-white">
+      <div className="page-shell grid gap-12 md:grid-cols-[1.2fr_0.8fr_0.8fr]">
+        <div>
+          <BrandMark />
+          <p className="mt-5 max-w-sm text-sm leading-7 text-white/42">
+            Création de sites internet à Kinshasa et à distance pour entrepreneurs, indépendants et PME.
+          </p>
+          <p className="mt-4 text-xs font-semibold uppercase text-white/28">Kinshasa · RDC · Diaspora · À distance</p>
+        </div>
+
+        <div>
+          <p className="text-xs font-semibold uppercase text-white/32">Navigation</p>
+          <div className="mt-5 grid gap-3">
+            {navigation.map(([label, href]) => (
+              <a key={href} href={href} className="w-fit text-sm text-white/48 transition-colors hover:text-white">
+                {label}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <p className="text-xs font-semibold uppercase text-white/32">Contact</p>
+          <div className="mt-5 grid gap-3">
+            <TrackedLink
+              href={whatsappHref()}
+              target="_blank"
+              rel="noopener noreferrer"
+              eventName="whatsapp_click"
+              eventPayload={{ source: "footer" }}
+              className="w-fit text-sm text-white/48 transition-colors hover:text-white"
+            >
+              WhatsApp
+            </TrackedLink>
+            <TrackedLink
+              href="mailto:hello@medhighali.com"
+              eventName="email_click"
+              eventPayload={{ source: "footer" }}
+              className="w-fit text-sm text-white/48 transition-colors hover:text-white"
+            >
+              hello@medhighali.com
+            </TrackedLink>
+            <a
+              href="https://linkedin.com/in/medhi-ghali-62a0a2154"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Profil LinkedIn de Medhi Ghali"
+              className="mt-2 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-white/48 transition-colors hover:border-white/24 hover:text-white"
+            >
+              <ExternalLink size={17} />
+            </a>
+          </div>
+        </div>
       </div>
 
-      <p className="font-body text-xs text-white/30">
-        © 2026 · Tous droits réservés
-      </p>
-
-      <a
-        href="https://linkedin.com/in/medhi-ghali-62a0a2154"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-white/50 transition-colors duration-200 hover:text-white"
-      >
-        <LinkedInIcon />
-      </a>
+      <div className="page-shell mt-14 flex flex-col gap-4 border-t border-white/8 pt-6 text-xs text-white/28 md:flex-row md:items-center md:justify-between">
+        <p>© {new Date().getFullYear()} MG Digital · Tous droits réservés</p>
+        <div className="flex flex-wrap gap-5">
+          <a href="/mentions-legales" className="transition-colors hover:text-white/60">
+            Mentions légales
+          </a>
+          <a href="/confidentialite" className="transition-colors hover:text-white/60">
+            Politique de confidentialité
+          </a>
+        </div>
+      </div>
     </footer>
   );
 }
