@@ -102,6 +102,12 @@ button:disabled {
   -webkit-backdrop-filter: blur(20px);
 }
 
+.glass-nav.nav-light {
+  border-color: rgba(10, 10, 14, 0.12);
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 18px 60px rgba(10, 10, 14, 0.12);
+}
+
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .glass-nav {
     background: rgba(10, 10, 14, 0.94);
@@ -431,4 +437,12 @@ select:focus-visible {
   .glass-nav.mobile-nav-surface {
     background: rgba(10, 10, 14, 0.96);
   }
+
+.glass-nav.mobile-nav-surface.nav-light {
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.mobile-nav-link-active {
+  font-weight: 700 !important;
+}
 }

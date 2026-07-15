@@ -21,7 +21,9 @@ const chatButtonClassName =
 export default function FloatingNavbar() {
   const [scrolled, setScrolled] = useState(false);
   const [activeHref, setActiveHref] = useState("");
+  const [isLight, setIsLight] = useState(false);
   const [identityCardVisible, setIdentityCardVisible] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
   const mobileLinksRef = useRef<HTMLDivElement>(null);
   const mobileLinkRefs = useRef<Array<HTMLAnchorElement | null>>([]);
   const hideMobileContactBar = identityCardVisible || activeHref === "#realisations" || activeHref === "#offres" || activeHref === "#contact";
@@ -45,6 +47,26 @@ export default function FloatingNavbar() {
     const updateNavigationState = () => {
       animationFrame = 0;
       setScrolled(window.scrollY > 56);
+
+      const headerRect = headerRef.current?.getBoundingClientRect();
+      const themeMarker = headerRect ? headerRect.top + headerRect.height / 2 : 36;
+      const themeSectionIds = ["accueil", "realisations", "services", "methode", "offres", "contact"];
+      let sectionId = "accueil";
+      let sectionTop = 0;
+
+      for (const id of themeSectionIds) {
+        const section = document.getElementById(id);
+        if (!section) continue;
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= themeMarker && rect.bottom > themeMarker) {
+          sectionId = id;
+          sectionTop = rect.top;
+        }
+      }
+
+      const isTransparentRealisationsEdge = sectionId === "realisations" && themeMarker - sectionTop < 48;
+      const nextLight = ["realisations", "offres", "contact"].includes(sectionId) && !isTransparentRealisationsEdge;
+      setIsLight((current) => (current === nextLight ? current : nextLight));
 
       const marker = window.scrollY + Math.min(window.innerHeight * 0.36, 300);
       let nextHref = "";
@@ -102,10 +124,10 @@ export default function FloatingNavbar() {
 
   return (
     <>
-      <header className="pointer-events-none fixed left-1/2 top-[max(0.5rem,env(safe-area-inset-top))] z-50 w-[min(calc(100vw-16px),1180px)] -translate-x-1/2 min-[840px]:top-5 min-[840px]:w-[min(94vw,1180px)]">
+      <header ref={headerRef} className="pointer-events-none fixed left-1/2 top-[max(0.5rem,env(safe-area-inset-top))] z-50 w-[min(calc(100vw-16px),1180px)] -translate-x-1/2 min-[840px]:top-5 min-[840px]:w-[min(94vw,1180px)]">
         <nav
           aria-label="Navigation principale"
-          className={`glass-nav mobile-nav-surface pointer-events-auto flex items-center gap-2 overflow-hidden rounded-full transition-all duration-300 ease-premium min-[840px]:justify-between min-[840px]:gap-0 ${
+          className={`glass-nav mobile-nav-surface pointer-events-auto flex items-center gap-2 overflow-hidden rounded-full transition-all duration-300 ease-premium min-[840px]:justify-between min-[840px]:gap-0 ${isLight ? "nav-light" : ""} ${
             scrolled
               ? "min-h-14 px-3 min-[840px]:min-h-14 min-[840px]:scale-[0.985] min-[840px]:px-5"
               : "min-h-14 px-3 min-[840px]:px-6"
@@ -118,10 +140,10 @@ export default function FloatingNavbar() {
           onClick={(event) => handleNavigation(event, "#accueil")}
         >
           <span className="hidden min-[840px]:inline-flex">
-            <BrandMark />
+            <BrandMark light={isLight} />
           </span>
           <span className="inline-flex min-[840px]:hidden">
-            <BrandMark compact />
+            <BrandMark compact light={isLight} />
           </span>
         </a>
 
@@ -141,17 +163,14 @@ export default function FloatingNavbar() {
                 href={link.href}
                 onClick={(event) => handleNavigation(event, link.href)}
                 aria-current={isActive ? "location" : undefined}
-                className={`relative flex min-h-9 shrink-0 items-center rounded-full px-3 text-[11px] font-semibold transition-colors duration-200 ${
-                  isActive ? "bg-white/[0.1] text-white" : "text-white/42 hover:bg-white/[0.05] hover:text-white/76"
+                style={{ fontWeight: isActive ? 700 : 500 }}
+                className={`relative flex min-h-9 shrink-0 items-center rounded-full px-3 text-[11px] transition-colors duration-200 ${isActive ? "mobile-nav-link-active" : "font-medium"} ${
+                  isLight
+                    ? isActive ? "bg-black/[0.065] text-black" : "text-black/44 hover:bg-black/[0.035] hover:text-black/76"
+                    : isActive ? "bg-white/[0.1] text-white" : "text-white/42 hover:bg-white/[0.05] hover:text-white/76"
                 }`}
               >
                 {link.label}
-                <span
-                  aria-hidden="true"
-                  className={`absolute bottom-1 left-1/2 size-1 -translate-x-1/2 rounded-full bg-[#9f96ff] transition-opacity ${
-                    isActive ? "opacity-100" : "opacity-0"
-                  }`}
-                />
               </a>
             );
           })}
@@ -165,7 +184,9 @@ export default function FloatingNavbar() {
               onClick={(event) => handleNavigation(event, link.href)}
               aria-current={activeHref === link.href ? "location" : undefined}
               className={`group relative flex min-h-10 items-center px-1 text-xs font-medium transition-colors duration-200 lg:text-[13px] ${
-                activeHref === link.href ? "text-white" : "text-white/44 hover:text-white/78"
+                isLight
+                  ? activeHref === link.href ? "text-black" : "text-black/44 hover:text-black/78"
+                  : activeHref === link.href ? "text-white" : "text-white/44 hover:text-white/78"
               }`}
             >
               {link.label}
@@ -188,7 +209,7 @@ export default function FloatingNavbar() {
             secondaryEvent="whatsapp_click"
             eventPayload={{ source: "navbar" }}
             aria-label="Ouvrir le chat WhatsApp"
-            className={`${chatButtonClassName} px-3.5`}
+            className={`${chatButtonClassName} px-3.5 ${isLight ? "!border-black/12 !bg-[#111116] !text-white hover:!bg-[#292930]" : ""}`}
           >
             <WhatsAppIcon size={16} className="text-[#19a957]" />
             Chat
