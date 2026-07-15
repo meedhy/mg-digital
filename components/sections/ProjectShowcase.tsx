@@ -261,76 +261,90 @@ function ProjectWall({
   const assignedProjectRefs = new Set<number>();
   const visibleTiles = selectedProject === null
     ? showcaseTiles
-    : projects[selectedProject].images.map((_, imageIndex) => ({
+    : projects[selectedProject].images.slice(0, 5).map((_, imageIndex) => ({
         projectIndex: selectedProject,
         imageIndex,
         className: "",
       }));
 
   return (
-    <div
-      key={selectedProject ?? "all"}
-      className={`panel-in grid auto-rows-[150px] grid-cols-2 gap-1.5 overflow-hidden rounded-md md:auto-rows-[210px] md:grid-cols-12 md:gap-2 lg:auto-rows-[250px] ${
-        selectedProject === null ? "" : "md:auto-rows-[250px]"
-      }`}
-    >
-      {visibleTiles.map(({ projectIndex, imageIndex, className }, tileIndex) => {
-        const project = projects[projectIndex];
-        const projectImage = project.images[imageIndex];
-        const isFirstProjectTile = !assignedProjectRefs.has(projectIndex);
-        assignedProjectRefs.add(projectIndex);
-        const filteredClassName = selectedProject === null
-          ? className
-          : tileIndex === 0
-            ? "col-span-2 row-span-2 md:col-span-7 md:row-span-2"
-            : tileIndex === 1 || tileIndex === 2
-              ? "col-span-1 md:col-span-5"
-              : tileIndex % 3 === 0
-                ? "col-span-2 md:col-span-5"
-                : "col-span-1 md:col-span-3";
+    <div key={selectedProject ?? "all"} className="panel-in">
+      <div
+        className={`grid auto-rows-[150px] grid-cols-2 gap-1.5 overflow-hidden rounded-md md:auto-rows-[210px] md:grid-cols-12 md:gap-2 lg:auto-rows-[250px] ${
+          selectedProject === null ? "" : "md:auto-rows-[250px]"
+        }`}
+      >
+        {visibleTiles.map(({ projectIndex, imageIndex, className }, tileIndex) => {
+          const project = projects[projectIndex];
+          const projectImage = project.images[imageIndex];
+          const isFirstProjectTile = !assignedProjectRefs.has(projectIndex);
+          assignedProjectRefs.add(projectIndex);
+          const filteredClassName = selectedProject === null
+            ? className
+            : tileIndex === 0
+              ? "col-span-2 row-span-2 md:col-span-7 md:row-span-2"
+              : tileIndex === 1 || tileIndex === 2
+                ? "col-span-1 md:col-span-5"
+                : tileIndex % 3 === 0
+                  ? "col-span-2 md:col-span-5"
+                  : "col-span-1 md:col-span-3";
+          const showCaption = selectedProject === null || tileIndex === 0;
 
-        return (
-          <button
-            key={`${project.name}-${projectImage.src}`}
-            ref={
-              isFirstProjectTile
-                ? (element) => {
-                    buttonRefs.current[projectIndex] = element;
-                  }
-                : undefined
-            }
-            type="button"
-            onClick={() => onOpen(projectIndex, imageIndex)}
-            aria-haspopup="dialog"
-            aria-label={`Découvrir ${project.name} : ${projectImage.title}`}
-            className={`group relative min-h-0 overflow-hidden bg-[#111116] text-left ${filteredClassName}`}
-          >
-            <Image
-              src={getPreviewSrc(projectImage.src)}
-              alt={projectImage.alt}
-              fill
-              unoptimized
-              sizes="(min-width: 1024px) 58vw, (min-width: 768px) 50vw, 100vw"
-              className={`transition duration-700 ${
-                projectImage.previewFit === "contain"
-                  ? "object-contain group-hover:opacity-95"
-                  : "object-cover group-hover:scale-[1.025]"
-              }`}
-              style={{ objectPosition: projectImage.previewPosition ?? "center" }}
-            />
-            <span className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-black/0" />
-            <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-3 text-white md:p-5">
-              <span>
-                <span className="block text-sm font-semibold leading-tight md:text-lg">{project.name}</span>
-                <span className="mt-1 hidden text-[10px] text-white/68 sm:block md:text-xs">{projectImage.title}</span>
-              </span>
-              <span className="grid size-8 shrink-0 place-items-center rounded-full border border-white/35 bg-black/20 backdrop-blur-sm transition-colors group-hover:bg-white group-hover:text-black md:size-10">
-                <ArrowUpRight size={14} strokeWidth={1.8} />
-              </span>
-            </span>
-          </button>
-        );
-      })}
+          return (
+            <button
+              key={`${project.name}-${projectImage.src}`}
+              ref={
+                isFirstProjectTile
+                  ? (element) => {
+                      buttonRefs.current[projectIndex] = element;
+                    }
+                  : undefined
+              }
+              type="button"
+              onClick={() => onOpen(projectIndex, imageIndex)}
+              aria-haspopup="dialog"
+              aria-label={`Découvrir ${project.name} : ${projectImage.title}`}
+              className={`project-tile-reveal group relative min-h-0 overflow-hidden bg-[#111116] text-left ${filteredClassName}`}
+            >
+              <Image
+                src={getPreviewSrc(projectImage.src)}
+                alt={projectImage.alt}
+                fill
+                unoptimized
+                sizes="(min-width: 1024px) 58vw, (min-width: 768px) 50vw, 100vw"
+                className={`transition duration-700 ${
+                  projectImage.previewFit === "contain"
+                    ? "object-contain group-hover:opacity-95"
+                    : "object-cover group-hover:scale-[1.025]"
+                }`}
+                style={{ objectPosition: projectImage.previewPosition ?? "center" }}
+              />
+              {showCaption && <span className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-black/0" />}
+              {showCaption && (
+                <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-3 text-white md:p-5">
+                  <span>
+                    <span className="block text-sm font-semibold leading-tight md:text-lg">{project.name}</span>
+                    <span className="mt-1 hidden text-[10px] text-white/68 sm:block md:text-xs">{projectImage.title}</span>
+                  </span>
+                  <span className="grid size-8 shrink-0 place-items-center rounded-full border border-white/35 bg-black/20 backdrop-blur-sm transition-colors group-hover:bg-white group-hover:text-black md:size-10">
+                    <ArrowUpRight size={14} strokeWidth={1.8} />
+                  </span>
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+      {selectedProject !== null && (
+        <button
+          type="button"
+          onClick={() => onOpen(selectedProject, 0)}
+          className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-black/14 px-5 text-sm font-semibold text-black/72 transition-colors hover:border-black/28 hover:bg-black/[0.035] md:w-auto md:px-7"
+        >
+          Voir toutes les images
+          <ArrowUpRight size={16} aria-hidden="true" />
+        </button>
+      )}
     </div>
   );
 }

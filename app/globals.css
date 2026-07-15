@@ -269,6 +269,21 @@ select:focus-visible {
   }
 }
 
+@keyframes project-tile-reveal {
+  from {
+    opacity: 0.18;
+    filter: blur(7px);
+    clip-path: inset(7% 0 0 0 round 6px);
+    transform: translate3d(0, 28px, 0) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    clip-path: inset(0 round 6px);
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
 .panel-in {
   animation: panel-in 520ms var(--ease-premium) both;
 }
@@ -295,6 +310,13 @@ select:focus-visible {
       animation-timeline: view();
       animation-range: entry 0% entry 58%;
     }
+
+    .project-tile-reveal {
+      animation: project-tile-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 4% cover 28%;
+      transform-origin: center bottom;
+    }
   }
 }
 
@@ -312,6 +334,10 @@ select:focus-visible {
 
 @media (prefers-reduced-motion: reduce) {
   .project-preview-in {
+    animation: none;
+  }
+
+  .project-tile-reveal {
     animation: none;
   }
 }

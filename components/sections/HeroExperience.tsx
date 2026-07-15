@@ -80,7 +80,7 @@ export default function HeroExperience() {
           <div className="relative z-20 max-w-[1100px]">
             <h1
               ref={titleRef}
-              className="max-w-[980px] origin-left text-[2.2rem] font-semibold leading-[0.96] text-white min-[380px]:text-[2.5rem] sm:text-[2.8rem] md:text-[3.8rem] lg:text-[5rem] xl:text-[5.7rem]"
+              className="max-w-[980px] origin-left text-[2.2rem] font-semibold leading-[1.06] text-white min-[380px]:text-[2.5rem] sm:text-[2.8rem] md:text-[3.8rem] md:leading-[1.01] lg:text-[5rem] xl:text-[5.7rem]"
             >
               Votre activité mérite <span className="font-editorial text-gradient block font-normal italic">un site qui la fait avancer.</span>
             </h1>

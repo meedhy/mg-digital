@@ -23,9 +23,9 @@ export default function ExpertiseSection() {
       <div className="page-shell">
         <div
           id="apropos"
-          className="identity-card-reveal overflow-hidden rounded-lg border border-black/10 bg-white text-[#101014] shadow-[0_24px_80px_rgba(5,5,10,0.14)] md:shadow-[0_24px_80px_rgba(5,5,10,0.08)]"
+          className="overflow-hidden rounded-lg border border-black/10 bg-white text-[#101014] shadow-[0_24px_80px_rgba(5,5,10,0.14)] md:shadow-[0_24px_80px_rgba(5,5,10,0.08)]"
         >
-          <div className="grid gap-5 p-5 md:grid-cols-[auto_1fr] md:gap-x-8 md:p-8 lg:p-10">
+          <div className="identity-card-reveal grid gap-5 p-5 md:grid-cols-[auto_1fr] md:gap-x-8 md:p-8 lg:p-10">
             <div className="flex items-center gap-4 md:items-start">
               <div className="relative size-20 shrink-0 md:size-24">
                 <div className="relative size-full overflow-hidden rounded-full border border-white/16 bg-white/8">
