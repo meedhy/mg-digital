@@ -18,24 +18,6 @@ export default function Footer() {
     <footer className="border-t border-white/8 bg-[#030304] pb-8 pt-14 text-white md:pt-16">
       <div className="page-shell grid gap-12 md:grid-cols-[1.2fr_0.8fr_0.8fr]">
         <div>
-          <BrandMark />
-          <p className="mt-5 max-w-sm text-sm leading-7 text-white/42">
-            Je conçois des sites clairs, solides et adaptés aux besoins des entrepreneurs, indépendants et PME.
-          </p>
-        </div>
-
-        <div>
-          <p className="text-xs font-semibold uppercase text-white/32">Navigation</p>
-          <div className="mt-5 grid gap-3">
-            {navigation.map(([label, href]) => (
-              <a key={href} href={href} className="w-fit text-sm text-white/48 transition-colors hover:text-white">
-                {label}
-              </a>
-            ))}
-          </div>
-        </div>
-
-        <div>
           <p className="text-xs font-semibold uppercase text-white/32">Contact</p>
           <div className="mt-5 flex items-center gap-3">
             <div className="relative size-14 shrink-0 overflow-hidden rounded-full border border-white/14 bg-white/5">
@@ -85,6 +67,24 @@ export default function Footer() {
             >
               <ExternalLink size={17} />
             </a>
+          </div>
+        </div>
+
+        <div>
+          <BrandMark />
+          <p className="mt-5 max-w-sm text-sm leading-7 text-white/42">
+            Je conçois des sites clairs, solides et adaptés aux besoins des entrepreneurs, indépendants et PME.
+          </p>
+        </div>
+
+        <div>
+          <p className="text-xs font-semibold uppercase text-white/32">Navigation</p>
+          <div className="mt-5 grid gap-3">
+            {navigation.map(([label, href]) => (
+              <a key={href} href={href} className="w-fit text-sm text-white/48 transition-colors hover:text-white">
+                {label}
+              </a>
+            ))}
           </div>
         </div>
       </div>

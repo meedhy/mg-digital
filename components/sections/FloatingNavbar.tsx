@@ -1,8 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { MouseEvent, useEffect, useRef, useState } from "react";
 import { ClipboardList } from "lucide-react";
-import BrandMark from "@/components/ui/BrandMark";
 import TrackedLink from "@/components/ui/TrackedLink";
 import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
 import { whatsappHref } from "@/lib/contact";
@@ -137,15 +137,19 @@ export default function FloatingNavbar() {
         <a
           href="#accueil"
           aria-label="Revenir à l’accueil"
-          className="shrink-0 rounded-full"
+          className={`relative size-9 shrink-0 overflow-hidden rounded-full border transition-colors duration-300 ${
+            isLight ? "border-black/12 bg-black/[0.04]" : "border-white/15 bg-white/[0.07]"
+          }`}
           onClick={(event) => handleNavigation(event, "#accueil")}
         >
-          <span className="hidden min-[840px]:inline-flex">
-            <BrandMark light={isLight} />
-          </span>
-          <span className="inline-flex min-[840px]:hidden">
-            <BrandMark compact light={isLight} />
-          </span>
+          <Image
+            src="/about/portrait-medhi-ghali.png"
+            alt="Medhi Ghali"
+            fill
+            sizes="36px"
+            priority
+            className="object-cover"
+          />
         </a>
 
         <div

@@ -11,6 +11,7 @@ type ProjectImage = {
   alt: string;
   title: string;
   previewPosition?: string;
+  previewFit?: "cover" | "contain";
   scrollPreview?: {
     width: number;
     height: number;
@@ -224,6 +225,7 @@ const projects: Project[] = [
         src: "/projects/le-monde/slide-14.jpg",
         alt: "Vue d’ensemble du système Liquid Glass conçu pour Le Monde sur iPhone et iPad",
         title: "Le système iOS 26 complet",
+        previewFit: "contain",
       },
     ],
   },
@@ -301,7 +303,7 @@ function ProjectWall({
             onClick={() => onOpen(projectIndex, imageIndex)}
             aria-haspopup="dialog"
             aria-label={`Découvrir ${project.name} : ${projectImage.title}`}
-            className={`group relative min-h-0 overflow-hidden bg-[#17171c] text-left ${filteredClassName}`}
+            className={`group relative min-h-0 overflow-hidden bg-[#111116] text-left ${filteredClassName}`}
           >
             <Image
               src={getPreviewSrc(projectImage.src)}
@@ -309,7 +311,11 @@ function ProjectWall({
               fill
               unoptimized
               sizes="(min-width: 1024px) 58vw, (min-width: 768px) 50vw, 100vw"
-              className="object-cover transition duration-700 group-hover:scale-[1.025]"
+              className={`transition duration-700 ${
+                projectImage.previewFit === "contain"
+                  ? "object-contain group-hover:opacity-95"
+                  : "object-cover group-hover:scale-[1.025]"
+              }`}
               style={{ objectPosition: projectImage.previewPosition ?? "center" }}
             />
             <span className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-black/0" />

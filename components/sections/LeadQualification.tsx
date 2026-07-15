@@ -14,7 +14,12 @@ const projectObjectives: Record<string, string> = {
   "Je veux améliorer mon site": "Moderniser un site existant",
   "J’ai un autre besoin": "Besoin spécifique",
 };
-const budgets = ["Moins de 500 $", "De 500 à 900 $", "De 1 000 à 2 000 $", "Plus de 2 000 $"];
+const budgets = [
+  "Moins de 500 € HT",
+  "De 500 à 900 € HT",
+  "De 1 000 à 2 000 € HT",
+  "Plus de 2 000 € HT",
+];
 const nextStepLabels = ["Choisir mon budget", "Ajouter mes coordonnées"];
 const fieldClassName =
   "min-h-12 rounded-lg border border-black/10 bg-black/[0.025] px-4 text-base font-normal text-black/78 outline-none transition-colors placeholder:text-black/28 focus:border-accent/70";

@@ -44,12 +44,12 @@ const offerGroups: Record<Situation, Offer[]> = {
         "SEO, analytics, mise en ligne et formation",
       ],
       deliverable: "Un site complet, professionnel et prêt à soutenir votre activité.",
-      price: "À partir de 1 200 $",
+      price: "À partir de 1 200 € HT",
       priceNote: "Pour un site vitrine professionnel de 4 à 6 pages.",
       cta: "Créer mon site",
       projectType: "Je veux créer mon site",
       objective: "Lancer un site complet",
-      budget: "De 1 000 à 2 000 $",
+      budget: "De 1 000 à 2 000 € HT",
     },
   ],
   existing: [
@@ -65,12 +65,12 @@ const offerGroups: Record<Situation, Offer[]> = {
         "SEO, tests, mise en ligne et formation",
       ],
       deliverable: "Un nouveau site plus clair, plus performant et plus évolutif.",
-      price: "À partir de 1 500 $",
+      price: "À partir de 1 500 € HT",
       priceNote: "Selon l’état du site, son volume et sa technologie.",
       cta: "Refondre mon site",
       projectType: "Je veux améliorer mon site",
       objective: "Moderniser un site existant",
-      budget: "De 1 000 à 2 000 $",
+      budget: "De 1 000 à 2 000 € HT",
     },
   ],
 };
@@ -114,11 +114,7 @@ function OfferCard({ offer, index, icon: OfferIcon }: { offer: Offer; index: num
       className="relative flex flex-col overflow-hidden rounded-lg border border-accent/35 bg-white p-5 sm:p-6 md:p-8 lg:p-10"
     >
       <div className="flex flex-col">
-        <div className="flex min-h-7 items-start gap-4">
-          <p className="text-[11px] font-bold uppercase text-black/42">{offer.category}</p>
-        </div>
-
-        <div className="mt-4 flex items-center gap-3">
+        <div className="flex items-center gap-3">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-accent/20 bg-accent/8 text-accent">
             <OfferIcon size={21} strokeWidth={1.7} aria-hidden="true" />
           </span>
@@ -192,7 +188,7 @@ export default function OffersExperience() {
       offer: "Projet sur mesure",
       projectType: "Projet sur mesure",
       objective: "Fonctionnalités avancées",
-      budget: "Plus de 2 000 $",
+      budget: "Plus de 2 000 € HT",
     });
   }
 
