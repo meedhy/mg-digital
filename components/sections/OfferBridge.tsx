@@ -65,7 +65,7 @@ export default function OfferBridge() {
           Trois projets montrent ma manière de penser une expérience, de la stratégie aux détails.
         </p>
         <TrackedLink
-          href="#realisations"
+          href="#projets"
           eventName="portfolio_bridge_click"
           eventPayload={{ source: "portfolio_transition" }}
           className="button-primary mt-9"

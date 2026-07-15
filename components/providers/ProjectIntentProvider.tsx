@@ -18,33 +18,30 @@ const emptyIntent: ProjectIntent = {
 
 type ProjectIntentContextValue = {
   intent: ProjectIntent;
+  isLeadFlowOpen: boolean;
   updateIntent: (values: Partial<ProjectIntent>) => void;
   openLeadFlow: (values?: Partial<ProjectIntent>) => void;
+  closeLeadFlow: () => void;
 };
 
 const ProjectIntentContext = createContext<ProjectIntentContextValue | null>(null);
 
-function scrollToLeadFlow() {
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  document.getElementById("contact")?.scrollIntoView({
-    behavior: reduceMotion ? "auto" : "smooth",
-    block: "start",
-  });
-}
-
 export default function ProjectIntentProvider({ children }: { children: ReactNode }) {
   const [intent, setIntent] = useState<ProjectIntent>(emptyIntent);
+  const [isLeadFlowOpen, setIsLeadFlowOpen] = useState(false);
 
   const value = useMemo<ProjectIntentContextValue>(
     () => ({
       intent,
+      isLeadFlowOpen,
       updateIntent: (values) => setIntent((current) => ({ ...current, ...values })),
       openLeadFlow: (values = {}) => {
         setIntent((current) => ({ ...current, ...values }));
-        window.requestAnimationFrame(scrollToLeadFlow);
+        setIsLeadFlowOpen(true);
       },
+      closeLeadFlow: () => setIsLeadFlowOpen(false),
     }),
-    [intent]
+    [intent, isLeadFlowOpen]
   );
 
   return <ProjectIntentContext.Provider value={value}>{children}</ProjectIntentContext.Provider>;

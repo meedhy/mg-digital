@@ -8,7 +8,8 @@ import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
 import { whatsappHref } from "@/lib/contact";
 
 const links = [
-  { href: "#realisations", label: "Réalisations" },
+  { href: "#apropos", label: "Contact" },
+  { href: "#projets", label: "Réalisations" },
   { href: "#services", label: "Services" },
   { href: "#methode", label: "Méthode" },
   { href: "#offres", label: "Offres" },
@@ -26,7 +27,7 @@ export default function FloatingNavbar() {
   const headerRef = useRef<HTMLElement>(null);
   const mobileLinksRef = useRef<HTMLDivElement>(null);
   const mobileLinkRefs = useRef<Array<HTMLAnchorElement | null>>([]);
-  const hideMobileContactBar = identityCardVisible || activeHref === "#realisations" || activeHref === "#offres" || activeHref === "#contact";
+  const hideMobileContactBar = identityCardVisible || activeHref === "#projets" || activeHref === "#offres" || activeHref === "#contact";
 
   useEffect(() => {
     const identityCard = document.querySelector<HTMLElement>("#apropos");
@@ -164,7 +165,7 @@ export default function FloatingNavbar() {
                 onClick={(event) => handleNavigation(event, link.href)}
                 aria-current={isActive ? "location" : undefined}
                 style={{ fontWeight: isActive ? 700 : 500 }}
-                className={`relative flex min-h-9 shrink-0 items-center rounded-full px-3 text-[11px] transition-colors duration-200 ${isActive ? "mobile-nav-link-active" : "font-medium"} ${
+                className={`relative flex min-h-10 shrink-0 items-center rounded-full px-3 text-xs transition-colors duration-200 ${isActive ? "mobile-nav-link-active" : "font-medium"} ${
                   isLight
                     ? isActive ? "bg-black/[0.065] text-black" : "text-black/44 hover:bg-black/[0.035] hover:text-black/76"
                     : isActive ? "bg-white/[0.1] text-white" : "text-white/42 hover:bg-white/[0.05] hover:text-white/76"
@@ -231,7 +232,7 @@ export default function FloatingNavbar() {
         <a
           href="#contact"
           onClick={(event) => handleNavigation(event, "#contact")}
-          className="inline-flex min-h-12 min-w-0 flex-1 items-center justify-center gap-2 rounded-full bg-white px-3 text-xs font-semibold text-[#09090d] transition-colors hover:bg-[#f4f4f6]"
+          className="inline-flex min-h-12 min-w-0 flex-1 items-center justify-center gap-2 rounded-full bg-white px-3 text-[13px] font-semibold text-[#09090d] transition-colors hover:bg-[#f4f4f6]"
         >
           <ClipboardList size={16} strokeWidth={1.8} />
           Votre projet
@@ -244,7 +245,7 @@ export default function FloatingNavbar() {
           secondaryEvent="whatsapp_click"
           eventPayload={{ source: "mobile_contact_bar" }}
           aria-label="Contacter MG Digital sur WhatsApp"
-          className="inline-flex min-h-12 min-w-0 flex-1 items-center justify-center gap-2 rounded-full border border-white/12 bg-white/[0.055] px-3 text-xs font-semibold text-white transition-colors hover:bg-white/[0.1]"
+          className="inline-flex min-h-12 min-w-0 flex-1 items-center justify-center gap-2 rounded-full border border-white/12 bg-white/[0.055] px-3 text-[13px] font-semibold text-white transition-colors hover:bg-white/[0.1]"
         >
           <WhatsAppIcon size={16} className="text-[#39d47a]" />
           Contacter

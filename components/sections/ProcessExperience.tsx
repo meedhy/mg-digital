@@ -14,12 +14,12 @@ type Step = {
 };
 
 const steps: Step[] = [
-  { number: "01", title: "Comprendre", text: "Nous clarifions votre activité, vos clients et le résultat attendu.", icon: Lightbulb },
-  { number: "02", title: "Cadrer", text: "Nous alignons le périmètre, le budget, les contenus et le calendrier.", icon: PenTool },
-  { number: "03", title: "Concevoir", text: "Nous validons les parcours, les messages clés et l’identité visuelle.", icon: Palette },
-  { number: "04", title: "Construire", text: "Nous développons un site rapide, maintenable et adapté à vos usages.", icon: Code2 },
-  { number: "05", title: "Tester", text: "Nous vérifions le mobile, les formulaires, la performance et le SEO.", icon: ScanSearch },
-  { number: "06", title: "Lancer", text: "Nous préparons la mise en ligne, vérifions chaque détail et vous rendons autonome.", icon: Rocket },
+  { number: "01", title: "On fait le point", text: "Vous m’expliquez votre activité, votre projet et ce qui vous bloque aujourd’hui.", icon: Lightbulb },
+  { number: "02", title: "Je structure le projet", text: "Je définis les pages, les contenus et les fonctionnalités réellement nécessaires.", icon: PenTool },
+  { number: "03", title: "Je conçois l’expérience", text: "Je travaille les parcours, l’interface et la version mobile de votre site.", icon: Palette },
+  { number: "04", title: "Je développe le site", text: "Les maquettes deviennent un site rapide, fonctionnel et adapté à tous les écrans.", icon: Code2 },
+  { number: "05", title: "On vérifie l’ensemble", text: "Le site est testé et ajusté avant sa mise en ligne.", icon: ScanSearch },
+  { number: "06", title: "Votre site est en ligne", text: "Je vous accompagne pour le prendre en main et suivre ses premiers résultats.", icon: Rocket },
 ];
 
 const launchStages = [
@@ -363,7 +363,7 @@ export default function ProcessExperience() {
         <div className="max-w-[520px]">
           <p className="section-label">Notre méthode</p>
           <h2 className="mt-5 text-4xl font-semibold leading-[1.02] text-white xl:text-5xl">
-            De votre idée à un site prêt à <span className="font-editorial font-normal italic text-white/62">performer.</span>
+            Votre site prend forme, <span className="font-editorial font-normal italic text-white/62">étape par étape.</span>
           </h2>
 
           <nav
@@ -437,7 +437,7 @@ export default function ProcessExperience() {
           <header className="pb-2">
             <p className="text-[10px] font-bold uppercase text-white/38">Notre méthode</p>
             <h2 className="mt-3 text-[1.75rem] font-semibold leading-[1.02] text-white">
-              Comment votre site <span className="block font-editorial font-normal italic text-white/58">prend forme.</span>
+              Votre site prend forme, <span className="block font-editorial font-normal italic text-white/58">étape par étape.</span>
             </h2>
           </header>
 
@@ -493,7 +493,7 @@ export default function ProcessExperience() {
                   <span className="text-[10px] font-bold text-[#a9a1ff]">{activeStep.number}</span>
                   <h3 className="text-xl font-semibold text-white">{activeStep.title}</h3>
                 </div>
-                <p className="mt-2 min-h-10 text-xs leading-5 text-white/54">{activeStep.text}</p>
+                <p className="mt-2 min-h-10 text-sm leading-6 text-white/60">{activeStep.text}</p>
                 <div className="mt-3 overflow-hidden rounded-md border border-white/8 bg-[#09090e]">
                   <ProcessVisual active={activeIndex} compact />
                 </div>
@@ -516,7 +516,7 @@ export default function ProcessExperience() {
         <div className="hidden max-w-3xl md:block">
           <p className="section-label">Notre méthode</p>
           <h2 className="section-heading mt-5">
-            De votre idée à un site prêt à <span className="font-editorial font-normal italic text-white/62">performer.</span>
+            Votre site prend forme, <span className="font-editorial font-normal italic text-white/62">étape par étape.</span>
           </h2>
         </div>
 

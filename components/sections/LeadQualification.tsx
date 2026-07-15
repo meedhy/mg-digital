@@ -1,22 +1,23 @@
 "use client";
 
-import { ArrowLeft, ArrowRight, Check, Compass, LayoutTemplate, LoaderCircle, MessageCircle, RefreshCw, Sparkles, WalletCards } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Compass, LayoutTemplate, LoaderCircle, MessageCircle, RefreshCw, Sparkles, WalletCards, X } from "lucide-react";
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { ProjectIntent, useProjectIntent } from "@/components/providers/ProjectIntentProvider";
 import { whatsappHref } from "@/lib/contact";
 import { trackEvent } from "@/lib/tracking";
 
-const projectTypes = ["Cadrer mon idée", "Créer mon site", "Refondre mon site", "Besoin spécifique"];
+const projectTypes = ["J’ai une idée à clarifier", "Je veux créer mon site", "Je veux améliorer mon site", "J’ai un autre besoin"];
 const projectObjectives: Record<string, string> = {
-  "Cadrer mon idée": "Clarifier et prioriser mon projet",
-  "Créer mon site": "Lancer un site complet",
-  "Refondre mon site": "Moderniser un site existant",
-  "Besoin spécifique": "Fonctionnalités avancées",
+  "J’ai une idée à clarifier": "Clarifier et prioriser mon projet",
+  "Je veux créer mon site": "Lancer un site complet",
+  "Je veux améliorer mon site": "Moderniser un site existant",
+  "J’ai un autre besoin": "Besoin spécifique",
 };
-const budgets = ["Moins de 500 $", "500 $ à 900 $", "1 000 $ à 2 000 $", "Plus de 2 000 $"];
+const budgets = ["Moins de 500 $", "De 500 à 900 $", "De 1 000 à 2 000 $", "Plus de 2 000 $"];
 const nextStepLabels = ["Choisir mon budget", "Ajouter mes coordonnées"];
 const fieldClassName =
-  "min-h-12 rounded-lg border border-black/10 bg-black/[0.025] px-4 text-sm font-normal text-black/78 outline-none transition-colors placeholder:text-black/28 focus:border-accent/70";
+  "min-h-12 rounded-lg border border-black/10 bg-black/[0.025] px-4 text-base font-normal text-black/78 outline-none transition-colors placeholder:text-black/28 focus:border-accent/70";
 
 type FormValues = {
   projectType: string;
@@ -251,24 +252,13 @@ function LeadQualificationForm({ intent }: { intent: ProjectIntent }) {
     }
   }
 
-  const questions = ["Quel est votre besoin ?", "Quel budget envisagez-vous ?", "Comment pouvons-nous vous recontacter ?"];
+  const questions = ["Où en est votre projet ?", "Quel budget envisagez-vous ?", "Comment puis-je vous répondre ?"];
 
   return (
-    <section id="contact" className="relative overflow-hidden border-t border-black/8 bg-white pb-12 pt-8 text-[#101014] md:py-20 lg:py-28">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(124,108,255,0.08),transparent_32%)]" />
-      <div className="page-shell relative grid lg:grid-cols-[0.78fr_1.22fr] lg:items-start lg:gap-12">
-        <div className="hidden lg:sticky lg:top-32 lg:block">
-          <p className="text-[0.72rem] font-bold uppercase leading-none text-black/42">Votre projet</p>
-          <h2 className="mt-5 text-[2.4rem] font-semibold leading-[1.02] text-black/88 md:text-[3.5rem]">
-            Parlons de votre <span className="font-editorial font-normal italic text-black/46">projet.</span>
-          </h2>
-          <p className="mt-6 max-w-sm text-base leading-7 text-black/54">Quelques réponses suffisent pour cadrer votre besoin.</p>
-        </div>
-
         <form
           ref={formRef}
           onSubmit={handleSubmit}
-          className="min-h-[520px] rounded-lg border border-black/10 bg-white p-4 shadow-[0_30px_100px_rgba(0,0,0,0.1)] sm:p-5 md:min-h-[560px] md:p-7 lg:min-h-[590px] lg:p-10"
+          className="w-full bg-white p-4 text-[#101014] sm:p-6 md:p-8 lg:p-10"
           noValidate
         >
           <input
@@ -282,7 +272,7 @@ function LeadQualificationForm({ intent }: { intent: ProjectIntent }) {
             className="absolute -left-[9999px]"
           />
 
-          <div className="border-b border-black/10 pb-5 lg:hidden">
+          <div className="border-b border-black/10 pb-5">
             <p className="text-[10px] font-bold uppercase text-black/38">Votre projet</p>
             <h2 className="mt-2 text-[1.75rem] font-semibold leading-[1.02] text-black/88">
               Parlons de votre <span className="font-editorial font-normal italic text-black/46">projet.</span>
@@ -355,7 +345,7 @@ function LeadQualificationForm({ intent }: { intent: ProjectIntent }) {
                   className="button-accent disabled:cursor-not-allowed disabled:opacity-55"
                 >
                   {status === "submitting" ? <LoaderCircle className="animate-spin" size={17} /> : <MessageCircle size={17} />}
-                  {status === "submitting" ? "Ouverture…" : "Envoyer sur WhatsApp"}
+                  {status === "submitting" ? "Ouverture…" : "Envoyer mon projet"}
                 </button>
               </div>
             </div>
@@ -392,7 +382,7 @@ function LeadQualificationForm({ intent }: { intent: ProjectIntent }) {
                 <legend className="mb-5 text-xl font-semibold text-black/88 md:mb-7 md:text-3xl">{questions[2]}</legend>
                 <div className="grid gap-4 md:grid-cols-2">
                   <label className="grid gap-2 text-sm font-semibold text-black/68">
-                    Nom
+                    Votre prénom
                     <input
                       name="name"
                       value={values.name}
@@ -405,7 +395,7 @@ function LeadQualificationForm({ intent }: { intent: ProjectIntent }) {
                     {fieldErrors.name && <span id="name-error" className="text-xs font-medium text-red-600">{fieldErrors.name}</span>}
                   </label>
                   <label className="grid gap-2 text-sm font-semibold text-black/68">
-                    Entreprise ou activité
+                    Votre activité ou entreprise
                     <input
                       name="company"
                       value={values.company}
@@ -415,7 +405,7 @@ function LeadQualificationForm({ intent }: { intent: ProjectIntent }) {
                     />
                   </label>
                   <label className="grid gap-2 text-sm font-semibold text-black/68 md:col-span-2">
-                    WhatsApp ou email
+                    Votre WhatsApp ou votre email
                     <input
                       name="contact"
                       value={values.contact}
@@ -429,14 +419,14 @@ function LeadQualificationForm({ intent }: { intent: ProjectIntent }) {
                     {fieldErrors.contact && <span id="contact-error" className="text-xs font-medium text-red-600">{fieldErrors.contact}</span>}
                   </label>
                   <label className="grid gap-2 text-sm font-semibold text-black/68 md:col-span-2">
-                    Message facultatif
+                    Quelques mots sur votre projet — facultatif
                     <textarea
                       name="message"
                       value={values.message}
                       onChange={(event) => updateValue("message", event.target.value)}
                       placeholder="Contexte, délai ou contrainte particulière"
                       rows={3}
-                      className="resize-none rounded-lg border border-black/10 bg-black/[0.025] px-4 py-3 text-sm font-normal leading-6 text-black/78 outline-none transition-colors placeholder:text-black/28 focus:border-accent/70"
+                      className="resize-none rounded-lg border border-black/10 bg-black/[0.025] px-4 py-3 text-base font-normal leading-7 text-black/78 outline-none transition-colors placeholder:text-black/28 focus:border-accent/70"
                     />
                   </label>
                   <label className="flex cursor-pointer items-start gap-3 text-sm leading-6 text-black/52 md:col-span-2">
@@ -449,7 +439,7 @@ function LeadQualificationForm({ intent }: { intent: ProjectIntent }) {
                       aria-describedby={fieldErrors.consent ? "consent-error" : undefined}
                       className="mt-0.5 h-5 w-5 shrink-0 accent-[#7c6cff]"
                     />
-                    <span>J’accepte que mes informations soient utilisées pour répondre à ma demande.</span>
+                    <span>Vos informations seront uniquement utilisées pour répondre à votre demande.</span>
                   </label>
                   {fieldErrors.consent && <span id="consent-error" className="text-xs font-medium text-red-600 md:col-span-2">{fieldErrors.consent}</span>}
                 </div>
@@ -478,7 +468,7 @@ function LeadQualificationForm({ intent }: { intent: ProjectIntent }) {
                   </button>
                 ) : (
                   <button type="submit" className="button-accent">
-                    Prévisualiser mon message
+                    Préparer mon projet
                     <ArrowRight className="button-arrow" size={16} />
                   </button>
                 )}
@@ -486,14 +476,82 @@ function LeadQualificationForm({ intent }: { intent: ProjectIntent }) {
             </div>
           )}
         </form>
-      </div>
-    </section>
   );
 }
 
 export default function LeadQualification() {
-  const { intent } = useProjectIntent();
+  const { intent, isLeadFlowOpen, openLeadFlow, closeLeadFlow } = useProjectIntent();
   const formKey = [intent.offer, intent.projectType, intent.objective, intent.budget].join("|");
 
-  return <LeadQualificationForm key={formKey} intent={intent} />;
+  useEffect(() => {
+    if (!isLeadFlowOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeLeadFlow();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [closeLeadFlow, isLeadFlowOpen]);
+
+  const bottomSheet =
+    isLeadFlowOpen && typeof document !== "undefined"
+      ? createPortal(
+          <div className="fixed inset-0 z-[100] flex items-end justify-center" role="dialog" aria-modal="true" aria-label="Parlons de votre projet">
+            <button
+              type="button"
+              aria-label="Fermer le formulaire"
+              onClick={closeLeadFlow}
+              className="absolute inset-0 bg-black/62 backdrop-blur-sm"
+            />
+            <div className="panel-in relative z-10 max-h-[calc(100dvh-env(safe-area-inset-top)-0.75rem)] w-full max-w-4xl overflow-y-auto rounded-t-[24px] bg-white shadow-[0_-30px_100px_rgba(0,0,0,0.3)]">
+              <div className="sticky top-0 z-20 flex justify-center bg-white/92 pb-1 pt-3 backdrop-blur-md">
+                <span className="h-1 w-12 rounded-full bg-black/14" aria-hidden="true" />
+                <button
+                  type="button"
+                  onClick={closeLeadFlow}
+                  aria-label="Fermer"
+                  className="absolute right-3 top-2 grid size-10 place-items-center rounded-full border border-black/10 bg-white text-black/58 transition-colors hover:bg-black/[0.04] hover:text-black"
+                >
+                  <X size={18} aria-hidden="true" />
+                </button>
+              </div>
+              <LeadQualificationForm key={formKey} intent={intent} />
+            </div>
+          </div>,
+          document.body,
+        )
+      : null;
+
+  return (
+    <>
+      <section id="contact" className="atmosphere noise relative overflow-hidden border-t border-white/10 bg-[#07070b] px-0 py-20 text-white md:py-28 lg:py-32">
+        <div className="interface-grid pointer-events-none absolute inset-0 opacity-35" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_35%,rgba(124,108,255,0.24),transparent_38%)]" />
+        <div className="page-shell relative flex flex-col items-center text-center">
+          <p className="text-[0.72rem] font-bold uppercase text-white/40">Votre projet</p>
+          <h2 className="mt-5 max-w-3xl text-[2.2rem] font-semibold leading-[0.98] text-white md:text-6xl">
+            Parlons de votre <span className="font-editorial font-normal italic text-white/55">projet.</span>
+          </h2>
+          <p className="mt-5 max-w-xl text-sm leading-6 text-white/52 md:text-base md:leading-7">
+            Quelques réponses suffisent pour comprendre votre situation et vous recommander la bonne approche.
+          </p>
+          <button
+            type="button"
+            onClick={() => openLeadFlow({ offer: "", projectType: "", objective: "", budget: "" })}
+            className="button-primary mt-8 min-w-[240px] md:mt-10"
+          >
+            Démarrer mon projet
+            <ArrowUpRight className="button-arrow" size={17} />
+          </button>
+        </div>
+      </section>
+      {bottomSheet}
+    </>
+  );
 }

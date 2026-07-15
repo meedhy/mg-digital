@@ -6,7 +6,7 @@ import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
 import { whatsappHref } from "@/lib/contact";
 
 const navigation = [
-  ["Réalisations", "#realisations"],
+  ["Réalisations", "#projets"],
   ["Services", "#services"],
   ["Méthode", "#methode"],
   ["Offres", "#offres"],
@@ -20,9 +20,8 @@ export default function Footer() {
         <div>
           <BrandMark />
           <p className="mt-5 max-w-sm text-sm leading-7 text-white/42">
-            Création de sites internet sur mesure pour entrepreneurs, indépendants et PME.
+            Je conçois des sites clairs, solides et adaptés aux besoins des entrepreneurs, indépendants et PME.
           </p>
-          <p className="mt-4 text-xs font-semibold uppercase text-white/28">Disponible pour vos projets, où que vous soyez</p>
         </div>
 
         <div>
@@ -50,7 +49,7 @@ export default function Footer() {
             </div>
             <div>
               <p className="text-sm font-semibold text-white/82">Parlons de votre projet</p>
-              <p className="mt-1 flex items-center gap-1.5 text-[11px] text-white/40">
+              <p className="mt-1 flex items-center gap-1.5 text-xs leading-5 text-white/46">
                 <span className="size-2 rounded-full bg-[#29c47d]" />
                 En ligne · lun–sam, 9h–20h
               </p>
@@ -66,7 +65,7 @@ export default function Footer() {
               className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/12 px-4 text-sm text-white/68 transition-colors hover:border-white/24 hover:text-white"
             >
               <WhatsAppIcon size={15} className="text-[#39d47a]" />
-              Échanger
+              Parler de mon projet
             </TrackedLink>
             <TrackedLink
               href="mailto:hello@medhighali.com"
@@ -75,7 +74,7 @@ export default function Footer() {
               className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/12 px-4 text-sm text-white/68 transition-colors hover:border-white/24 hover:text-white"
             >
               <Mail size={15} aria-hidden="true" />
-              Email
+              M’écrire par email
             </TrackedLink>
             <a
               href="https://linkedin.com/in/medhi-ghali-62a0a2154"

@@ -2,13 +2,16 @@
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowDown, ArrowUpRight, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import { useEffect, useRef } from "react";
+import { useProjectIntent } from "@/components/providers/ProjectIntentProvider";
 import TrackedLink from "@/components/ui/TrackedLink";
+import { trackEvent } from "@/lib/tracking";
 
 const reassurance = ["Premier échange gratuit", "Réponse sous 24 h", "Site livré clé en main"];
 
 export default function HeroExperience() {
+  const { openLeadFlow } = useProjectIntent();
   const sectionRef = useRef<HTMLElement>(null);
   const backgroundRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -79,37 +82,37 @@ export default function HeroExperience() {
               ref={titleRef}
               className="max-w-[980px] origin-left text-[2.2rem] font-semibold leading-[0.96] text-white min-[380px]:text-[2.5rem] sm:text-[2.8rem] md:text-[3.8rem] lg:text-[5rem] xl:text-[5.7rem]"
             >
-              Votre site internet <span className="font-editorial text-gradient inline-block font-normal italic">commence ici.</span>
+              Votre activité mérite <span className="font-editorial text-gradient block font-normal italic">un site qui la fait avancer.</span>
             </h1>
           </div>
 
           <div ref={copyRef} className="relative z-30 mt-5 max-w-[620px] md:mt-9">
-            <p className="max-w-[520px] text-sm font-light leading-6 text-white/64 sm:text-base sm:leading-7 md:text-lg md:leading-8">
-              Un site clair, rapide et pensé pour faire avancer votre activité.
+            <p className="max-w-[520px] text-base font-light leading-7 text-white/68 md:text-lg md:leading-8">
+              Je vous accompagne du premier échange à la mise en ligne pour créer un site utile, solide et adapté à vos objectifs.
             </p>
             <div className="mt-5 flex flex-col gap-3 sm:mt-7 sm:flex-row">
-              <TrackedLink
-                href="#contact"
-                eventName="hero_primary_cta_click"
-                eventPayload={{ source: "hero" }}
+              <button
+                type="button"
+                onClick={() => {
+                  trackEvent("hero_primary_cta_click", { source: "hero" });
+                  openLeadFlow({ offer: "", projectType: "", objective: "", budget: "" });
+                }}
                 className="button-primary"
               >
-                Démarrer mon site
-                <ArrowUpRight className="button-arrow" size={17} />
-              </TrackedLink>
+                Parler de mon projet
+              </button>
               <TrackedLink
-                href="#realisations"
+                href="#projets"
                 eventName="hero_portfolio_click"
                 eventPayload={{ source: "hero" }}
                 className="button-secondary"
               >
-                Voir les réalisations
-                <ArrowDown className="button-arrow" size={16} />
+                Voir mes réalisations
               </TrackedLink>
             </div>
             <div className="mt-5 flex flex-col items-start gap-2.5 sm:mt-7 md:flex-row md:flex-wrap md:gap-x-5">
               {reassurance.map((item) => (
-                <span key={item} className="inline-flex items-center gap-2 text-xs font-medium text-white/62">
+                <span key={item} className="inline-flex items-center gap-2 text-[15px] font-medium leading-6 text-white/70">
                   <Check size={13} className="shrink-0 text-success" />
                   <span>{item}</span>
                 </span>

@@ -16,7 +16,6 @@ type Offer = {
   price: string;
   priceNote: string;
   cta: string;
-  recommended: boolean;
   projectType: string;
   objective: string;
   budget: string;
@@ -48,10 +47,9 @@ const offerGroups: Record<Situation, Offer[]> = {
       price: "À partir de 1 200 $",
       priceNote: "Pour un site vitrine professionnel de 4 à 6 pages.",
       cta: "Créer mon site",
-      recommended: true,
-      projectType: "Créer un site",
+      projectType: "Je veux créer mon site",
       objective: "Lancer un site complet",
-      budget: "1 000 $ à 2 000 $",
+      budget: "De 1 000 à 2 000 $",
     },
   ],
   existing: [
@@ -70,10 +68,9 @@ const offerGroups: Record<Situation, Offer[]> = {
       price: "À partir de 1 500 $",
       priceNote: "Selon l’état du site, son volume et sa technologie.",
       cta: "Refondre mon site",
-      recommended: true,
-      projectType: "Refaire un site",
+      projectType: "Je veux améliorer mon site",
       objective: "Moderniser un site existant",
-      budget: "1 000 $ à 2 000 $",
+      budget: "De 1 000 à 2 000 $",
     },
   ],
 };
@@ -114,18 +111,11 @@ function OfferCard({ offer, index, icon: OfferIcon }: { offer: Offer; index: num
   return (
     <article
       ref={cardRef}
-      className={`relative flex flex-col overflow-hidden rounded-lg border p-5 sm:p-6 md:p-8 lg:p-10 ${
-        offer.recommended ? "border-accent/35 bg-white" : "border-black/10 bg-white"
-      }`}
+      className="relative flex flex-col overflow-hidden rounded-lg border border-accent/35 bg-white p-5 sm:p-6 md:p-8 lg:p-10"
     >
       <div className="flex flex-col">
-        <div className="flex min-h-7 items-start justify-between gap-4">
+        <div className="flex min-h-7 items-start gap-4">
           <p className="text-[11px] font-bold uppercase text-black/42">{offer.category}</p>
-          {offer.recommended && (
-            <span className="rounded-full border border-accent/35 bg-accent/12 px-3 py-1 text-[10px] font-bold uppercase text-[#b7b0ff]">
-              Recommandé
-            </span>
-          )}
         </div>
 
         <div className="mt-4 flex items-center gap-3">
@@ -134,11 +124,11 @@ function OfferCard({ offer, index, icon: OfferIcon }: { offer: Offer; index: num
           </span>
           <h3 className="max-w-[720px] text-2xl font-semibold leading-tight text-black/88 sm:text-3xl lg:text-[2.35rem]">{offer.title}</h3>
         </div>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-black/54 md:text-base md:leading-7">{offer.description}</p>
+        <p className="mt-3 max-w-2xl text-base leading-7 text-black/56">{offer.description}</p>
 
         <ul className="mt-5 grid grid-cols-1 gap-2.5 sm:grid-cols-2 md:mt-7 md:gap-x-8 md:gap-y-3">
           {offer.features.map((item) => (
-            <li key={item} className="flex items-start gap-2 text-xs leading-5 text-black/62 md:text-sm md:leading-6">
+            <li key={item} className="flex items-start gap-2 text-sm leading-6 text-black/66">
               <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-success/12 text-success">
                 <Check size={11} strokeWidth={2.5} aria-hidden="true" />
               </span>
@@ -149,18 +139,18 @@ function OfferCard({ offer, index, icon: OfferIcon }: { offer: Offer; index: num
 
         <div className="mt-6 border-t border-black/10 pt-5 md:mt-8 md:pt-6">
           <p className="text-[10px] font-bold uppercase text-black/34">Livrable</p>
-          <p className="mt-2 max-w-2xl text-xs leading-5 text-black/62 md:text-sm md:leading-6">{offer.deliverable}</p>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-black/64">{offer.deliverable}</p>
           {offer.transitionNote && <p className="mt-3 max-w-2xl text-[11px] leading-5 text-black/36 md:text-xs">{offer.transitionNote}</p>}
 
           <div className="mt-5 md:flex md:items-end md:justify-between md:gap-8">
             <div>
               <p className="text-sm font-semibold text-black/76 md:text-base">{offer.price}</p>
-              <p className="mt-1 max-w-md text-[11px] leading-4 text-black/38 md:text-xs md:leading-5">{offer.priceNote}</p>
+              <p className="mt-1 max-w-md text-[13px] leading-5 text-black/46 md:text-sm">{offer.priceNote}</p>
             </div>
             <button
               type="button"
               onClick={chooseOffer}
-              className={`${offer.recommended ? "button-accent" : "button-secondary"} mt-4 w-full md:mt-0 md:w-auto md:min-w-[230px]`}
+              className="button-accent mt-4 w-full md:mt-0 md:w-auto md:min-w-[230px]"
             >
               {offer.cta}
               <ArrowUpRight className="button-arrow" size={17} aria-hidden="true" />
@@ -213,27 +203,27 @@ export default function OffersExperience() {
           <div className="md:hidden">
             <p className="text-[0.72rem] font-bold uppercase leading-none text-black/42">Offres</p>
             <h2 className="mt-4 text-[1.75rem] font-semibold leading-[1.02] text-black/88">
-              Choisissez votre <span className="font-editorial font-normal italic text-black/46">accompagnement.</span>
+              Où en est votre <span className="font-editorial font-normal italic text-black/46">projet ?</span>
             </h2>
-            <p className="mt-3 max-w-sm text-xs leading-5 text-black/52">
-              Deux solutions complètes, selon que votre site existe déjà ou non.
+            <p className="mt-3 max-w-sm text-sm leading-6 text-black/56">
+              Une solution complète, que vous partiez de zéro ou d’un site existant.
             </p>
           </div>
 
           <SectionHeading
             label="Offres"
-            text="Deux solutions complètes, selon que votre site existe déjà ou non. Le périmètre est confirmé après un échange."
+            text="Une solution complète, que vous partiez de zéro ou d’un site existant. Le périmètre est confirmé après un échange."
             className="hidden md:block"
             light
           >
-            Choisissez votre <span className="font-editorial font-normal italic text-black/46">accompagnement.</span>
+            Où en est votre <span className="font-editorial font-normal italic text-black/46">projet ?</span>
           </SectionHeading>
         </div>
 
         <div className="min-w-0">
         <div className="mt-7 max-w-[960px] md:mt-10 lg:mt-0">
-          <nav aria-label="Choisir votre situation" className="overflow-hidden rounded-lg border border-black/10 bg-white">
-            <div role="tablist" aria-label="Situation actuelle" className="grid grid-cols-2">
+          <nav aria-label="Choisir votre situation">
+            <div role="tablist" aria-label="Situation actuelle" className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {situationOptions.map((situation, index) => {
                 const isActive = situation.id === activeSituation;
                 return (
@@ -250,8 +240,10 @@ export default function OffersExperience() {
                     onKeyDown={(event) => handleSituationKeyDown(event, index)}
                     aria-selected={isActive}
                     aria-controls="offer-panel"
-                    className={`flex min-h-14 items-center justify-center whitespace-nowrap border-r border-black/10 px-2 py-2 text-center text-[10px] font-semibold leading-none transition-colors last:border-r-0 sm:px-3 sm:text-xs md:min-h-16 md:text-sm ${
-                      isActive ? "bg-[#101014] text-white" : "text-black/42 hover:bg-black/[0.035] hover:text-black/72"
+                    className={`flex min-h-10 shrink-0 items-center justify-center whitespace-nowrap rounded-full border px-4 text-center text-[10px] font-semibold leading-none transition-colors sm:px-5 sm:text-xs md:text-sm ${
+                      isActive
+                        ? "border-black bg-black text-white"
+                        : "border-black/12 bg-transparent text-black/48 hover:border-black/30 hover:text-black"
                     }`}
                   >
                     {situation.label}
@@ -278,7 +270,7 @@ export default function OffersExperience() {
         </div>
 
         <div className="mt-8 flex max-w-[960px] flex-col gap-4 border-t border-black/10 pt-7 sm:flex-row sm:items-center sm:justify-between">
-          <p className="max-w-2xl text-xs leading-5 text-black/44 md:text-sm md:leading-6">
+          <p className="max-w-2xl text-sm leading-6 text-black/50">
             Un besoin précis, une fonctionnalité ou un projet différent ? Décrivez votre demande et je vous répondrai avec une proposition adaptée.
           </p>
           <button type="button" onClick={openCustomProject} className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full border border-black/14 px-6 text-sm font-semibold text-black/72 transition-colors hover:border-black/30 hover:bg-black/[0.035]">

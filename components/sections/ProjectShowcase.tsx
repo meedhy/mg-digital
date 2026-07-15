@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { ArrowUpRight, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { MutableRefObject } from "react";
 import { createPortal } from "react-dom";
 
 type ProjectImage = {
@@ -31,9 +32,8 @@ const projects: Project[] = [
   {
     number: "01",
     name: "Cdiscount",
-    subtitle: "Rebranding & expérience e-commerce",
-    description:
-      "Participation au rebranding de Cdiscount, à la refonte de la home page et des pages vitrines, ainsi qu’à la structuration d’un design system partagé pour les parcours desktop et mobile.",
+    subtitle: "Parcours & interfaces e-commerce",
+    description: "Refonte de parcours et d’interfaces e-commerce sur desktop et mobile.",
     context: "Projet réalisé dans le cadre de mon expérience professionnelle chez Cdiscount.",
     tags: ["Rebranding", "UX/UI", "Design system", "Web & mobile"],
     accent: "#5f54d8",
@@ -68,9 +68,8 @@ const projects: Project[] = [
   {
     number: "02",
     name: "Persil & Romarin",
-    subtitle: "Identité de marque & expérience web",
-    description:
-      "Conception d’une identité visuelle complète et de sa déclinaison digitale, du logo et de la charte graphique jusqu’aux interfaces responsive du site Persil & Romarin.",
+    subtitle: "Identité & site de marque",
+    description: "Conception d’une identité et d’un site pensés pour présenter la marque et ses opportunités.",
     context: "Un univers de marque chaleureux conçu pour valoriser les chefs, les repas et le savoir-faire culinaire.",
     tags: ["Identité visuelle", "Charte graphique", "UX/UI", "Responsive"],
     accent: "#00be88",
@@ -149,9 +148,8 @@ const projects: Project[] = [
   {
     number: "03",
     name: "Le Monde",
-    subtitle: "Refonte Liquid Glass · iOS 26",
-    description:
-      "Refonte de l’expérience iPhone et iPad de l’application Le Monde pour iOS 26 : navigation, tab bar, toolbar, headers translucides et composants natifs pensés dans le langage Liquid Glass.",
+    subtitle: "Expérience mobile à forte audience",
+    description: "Conception d’expériences mobiles utilisées chaque jour par une large audience.",
     context:
       "Une évolution menée à l’échelle d’une application d’actualité majeure, distinguée par l’App Store pour son nouveau design.",
     tags: ["Product design", "Liquid Glass", "iOS 26", "iPhone & iPad"],
@@ -237,78 +235,102 @@ function getPreviewSrc(src: string) {
     .replace(/\.(?:png|jpe?g)$/i, ".jpg");
 }
 
-function ProjectMosaic({
-  project,
-  projectIndex,
-  buttonRef,
+const showcaseTiles = [
+  { projectIndex: 0, imageIndex: 0, className: "col-span-2 row-span-2 md:col-span-7 md:row-span-2" },
+  { projectIndex: 1, imageIndex: 0, className: "col-span-1 row-span-1 md:col-span-5" },
+  { projectIndex: 2, imageIndex: 0, className: "col-span-1 row-span-1 md:col-span-5" },
+  { projectIndex: 2, imageIndex: 2, className: "col-span-2 row-span-1 md:col-span-4" },
+  { projectIndex: 0, imageIndex: 1, className: "col-span-1 row-span-1 md:col-span-3" },
+  { projectIndex: 1, imageIndex: 2, className: "col-span-1 row-span-1 md:col-span-5" },
+  { projectIndex: 0, imageIndex: 4, className: "col-span-1 row-span-1 md:col-span-4" },
+  { projectIndex: 1, imageIndex: 1, className: "col-span-1 row-span-1 md:col-span-3" },
+  { projectIndex: 2, imageIndex: 13, className: "col-span-2 row-span-1 md:col-span-5" },
+];
+
+function ProjectWall({
+  buttonRefs,
   onOpen,
+  selectedProject,
 }: {
-  project: Project;
-  projectIndex: number;
-  buttonRef: (element: HTMLButtonElement | null) => void;
-  onOpen: (imageIndex: number) => void;
+  buttonRefs: MutableRefObject<Array<HTMLButtonElement | null>>;
+  onOpen: (projectIndex: number, imageIndex: number) => void;
+  selectedProject: number | null;
 }) {
-  const visibleImages = project.images.slice(0, 4);
+  const assignedProjectRefs = new Set<number>();
+  const visibleTiles = selectedProject === null
+    ? showcaseTiles
+    : projects[selectedProject].images.map((_, imageIndex) => ({
+        projectIndex: selectedProject,
+        imageIndex,
+        className: "",
+      }));
 
   return (
-    <article className="border-t border-black/10 pt-5 first:border-t-0 first:pt-0 md:pt-8">
-      <header className="mb-3 flex items-center justify-between gap-4 md:mb-5">
-        <h3 className="text-2xl font-semibold leading-none text-black/88 md:text-4xl">{project.name}</h3>
-        <button
-          type="button"
-          onClick={() => onOpen(0)}
-          aria-label={`Voir le projet ${project.name}`}
-          className="group grid size-10 shrink-0 place-items-center rounded-full border border-black/16 text-black/58 transition-colors hover:border-black hover:bg-black hover:text-white"
-        >
-          <ArrowUpRight size={14} strokeWidth={1.8} className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-        </button>
-      </header>
+    <div
+      key={selectedProject ?? "all"}
+      className={`panel-in grid auto-rows-[150px] grid-cols-2 gap-1.5 overflow-hidden rounded-md md:auto-rows-[210px] md:grid-cols-12 md:gap-2 lg:auto-rows-[250px] ${
+        selectedProject === null ? "" : "md:auto-rows-[250px]"
+      }`}
+    >
+      {visibleTiles.map(({ projectIndex, imageIndex, className }, tileIndex) => {
+        const project = projects[projectIndex];
+        const projectImage = project.images[imageIndex];
+        const isFirstProjectTile = !assignedProjectRefs.has(projectIndex);
+        assignedProjectRefs.add(projectIndex);
+        const filteredClassName = selectedProject === null
+          ? className
+          : tileIndex === 0
+            ? "col-span-2 row-span-2 md:col-span-7 md:row-span-2"
+            : tileIndex === 1 || tileIndex === 2
+              ? "col-span-1 md:col-span-5"
+              : tileIndex % 3 === 0
+                ? "col-span-2 md:col-span-5"
+                : "col-span-1 md:col-span-3";
 
-      <div className="grid grid-cols-2 gap-1.5 md:gap-2 lg:auto-rows-[220px] lg:grid-flow-dense lg:grid-cols-12">
-        {visibleImages.map((image, imageIndex) => {
-          const isPrimary = imageIndex === 0;
-          return (
-            <button
-              key={image.src}
-              ref={isPrimary ? buttonRef : undefined}
-              type="button"
-              onClick={() => onOpen(imageIndex)}
-              aria-haspopup="dialog"
-              aria-label={`Découvrir ${project.name} : ${image.title}`}
-              className={`group relative overflow-hidden rounded-[4px] bg-[#17171c] text-left ${
-                isPrimary
-                  ? "col-span-2 aspect-[16/10] lg:col-span-7 lg:row-span-2 lg:aspect-auto"
-                  : imageIndex === 1
-                    ? "aspect-square lg:col-span-5 lg:aspect-auto"
-                    : imageIndex === 2
-                      ? "aspect-square lg:col-span-3 lg:aspect-auto"
-                      : "hidden aspect-square md:block lg:col-span-2 lg:aspect-auto"
-              } ${projectIndex % 2 === 1 && isPrimary ? "lg:col-start-6" : ""}`}
-            >
-              <Image
-                src={getPreviewSrc(image.src)}
-                alt={image.alt}
-                fill
-                unoptimized
-                sizes="(min-width: 1024px) 58vw, (min-width: 768px) 50vw, 100vw"
-                className="object-cover transition duration-700 group-hover:scale-[1.025]"
-                style={{ objectPosition: image.previewPosition ?? "center" }}
-              />
-              <span className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/10" />
-              <span className="absolute bottom-3 right-3 text-white opacity-90 md:bottom-4 md:right-4">
-                <span className="grid size-7 place-items-center rounded-full border border-white/30 bg-black/24 transition-colors group-hover:bg-white group-hover:text-black">
-                  <ArrowUpRight size={13} strokeWidth={1.8} />
-                </span>
+        return (
+          <button
+            key={`${project.name}-${projectImage.src}`}
+            ref={
+              isFirstProjectTile
+                ? (element) => {
+                    buttonRefs.current[projectIndex] = element;
+                  }
+                : undefined
+            }
+            type="button"
+            onClick={() => onOpen(projectIndex, imageIndex)}
+            aria-haspopup="dialog"
+            aria-label={`Découvrir ${project.name} : ${projectImage.title}`}
+            className={`group relative min-h-0 overflow-hidden bg-[#17171c] text-left ${filteredClassName}`}
+          >
+            <Image
+              src={getPreviewSrc(projectImage.src)}
+              alt={projectImage.alt}
+              fill
+              unoptimized
+              sizes="(min-width: 1024px) 58vw, (min-width: 768px) 50vw, 100vw"
+              className="object-cover transition duration-700 group-hover:scale-[1.025]"
+              style={{ objectPosition: projectImage.previewPosition ?? "center" }}
+            />
+            <span className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-black/0" />
+            <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-3 text-white md:p-5">
+              <span>
+                <span className="block text-sm font-semibold leading-tight md:text-lg">{project.name}</span>
+                <span className="mt-1 hidden text-[10px] text-white/68 sm:block md:text-xs">{projectImage.title}</span>
               </span>
-            </button>
-          );
-        })}
-      </div>
-    </article>
+              <span className="grid size-8 shrink-0 place-items-center rounded-full border border-white/35 bg-black/20 backdrop-blur-sm transition-colors group-hover:bg-white group-hover:text-black md:size-10">
+                <ArrowUpRight size={14} strokeWidth={1.8} />
+              </span>
+            </span>
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
 export default function ProjectShowcase() {
+  const [selectedProject, setSelectedProject] = useState<number | null>(null);
   const [activeProjectIndex, setActiveProjectIndex] = useState<number | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const cardRefs = useRef<Array<HTMLButtonElement | null>>([]);
@@ -540,20 +562,34 @@ export default function ProjectShowcase() {
       : null;
 
   return (
-    <div className="mt-8 md:mt-12">
-      <div className="grid gap-10 md:gap-16 lg:gap-20">
-        {projects.map((project, index) => (
-          <ProjectMosaic
-            key={project.name}
-            project={project}
-            projectIndex={index}
-            buttonRef={(element) => {
-              cardRefs.current[index] = element;
-            }}
-            onOpen={(imageIndex) => openGallery(index, imageIndex)}
-          />
-        ))}
+    <div className="mt-6 md:mt-10">
+      <div className="mb-4 flex gap-1 overflow-x-auto border-b border-black/10 pb-3 [scrollbar-width:none] md:mb-6 md:justify-end [&::-webkit-scrollbar]:hidden" role="tablist" aria-label="Filtrer les réalisations">
+        {[
+          { label: "Tout", value: null },
+          { label: "Persil & Romarin", value: 1 },
+          { label: "Cdiscount", value: 0 },
+          { label: "Le Monde", value: 2 },
+        ].map((filter) => {
+          const isActive = selectedProject === filter.value;
+          return (
+            <button
+              key={filter.label}
+              type="button"
+              role="tab"
+              aria-selected={isActive}
+              onClick={() => setSelectedProject(filter.value)}
+              className={`min-h-11 shrink-0 rounded-full border px-4 text-[13px] font-semibold transition-colors md:px-5 md:text-sm ${
+                isActive
+                  ? "border-black bg-black text-white"
+                  : "border-black/12 bg-transparent text-black/48 hover:border-black/30 hover:text-black"
+              }`}
+            >
+              {filter.label}
+            </button>
+          );
+        })}
       </div>
+      <ProjectWall buttonRefs={cardRefs} onOpen={openGallery} selectedProject={selectedProject} />
 
       {galleryModal}
     </div>
